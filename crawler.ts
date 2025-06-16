@@ -27,10 +27,10 @@ function randomDelay(min: number, max: number) {
 
 async function checkFileExists(filePath: string): Promise<boolean> {
   try {
-    await fs.access(filePath);
+    await fs.access(filePath, fs.constants.F_OK);
     return true;
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return false;
   }
 }
@@ -62,14 +62,20 @@ async function parsePageNameUrls(nameUrl: NameUrl, selector: string) {
     page = await fs.readFile(filePath, 'utf8');
   } else {
     page = await getPage(nameUrl.url);
-    fs.writeFile(filePath, page, 'utf8');
+    await fs.writeFile(filePath, page, 'utf8');
   }
   const contentsHref = [] as NameUrl[]
   const $ = cheerio.load(page);
   const aTags = $(selector);
   aTags.each((idx, element) => {
     const aTag = $(element)
-    contentsHref.push({ name: aTag.text().replace(/\s/g, ''), url: `${ROOT_URL}/${aTag.attr('href') || ''}` })
+    let name = aTag.text().replace(/\s/g, '')
+    const url = `${ROOT_URL}/${aTag.attr('href') || ''}`
+    if(name === '') {
+      console.log(`${url}名字为空`)
+      name = url
+    }
+    contentsHref.push({ name, url})
   })
   return contentsHref;
 }
@@ -85,13 +91,13 @@ async function parseChapterPage(nameUrl: NameUrl): Promise<NameUrl[]> {
 async function parseSectionPage(nameUrl: NameUrl) {
   const filePath = `./html/${nameUrl.name}.html`
   const fileExists = await checkFileExists(filePath)
-  let page = await getPage(nameUrl.url);
+  let page = "";
 
   if (fileExists) {
     page = await fs.readFile(filePath, 'utf8');
   } else {
     page = await getPage(nameUrl.url);
-    writeFile(filePath, page);
+    await writeFile(filePath, page);
   }
   const codes = [] as string[]
   const $ = cheerio.load(page);

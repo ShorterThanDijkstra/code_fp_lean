@@ -1,0 +1,1 @@
+-- https://lean-lang.org/functional_programming_in_lean//Hello___-World___/Starting-a-Project/#Functional-Programming-in-Lean--Hello___-World___--Starting-a-Project

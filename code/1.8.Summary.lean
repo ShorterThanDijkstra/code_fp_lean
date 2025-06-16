@@ -1,0 +1,1 @@
+-- https://lean-lang.org/functional_programming_in_lean//Getting-to-Know-Lean/Summary/#Functional-Programming-in-Lean--Getting-to-Know-Lean--Summary

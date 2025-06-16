@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      (function(){
+  const {protocol:proto, host:hostName, pathname:path, search:srch, hash:hsh} = window.location;
+  if (!(path.endsWith("/") || path.endsWith(".html"))) {
+    window.location.replace(`${proto}//${hostName}${path}/${srch}${hsh}`);
+  }
+})()</script>
+    <base href="./../../"><meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>Positive Numbers</title><link rel="stylesheet" href="book.css">
+    <script>
+      const __versoSiteRoot = document.baseURI;</script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
+    <script src="-verso-data/katex/katex.js"></script>
+    <script src="-verso-data/katex/math.js"></script>
+    <script src="-verso-data/popper.js"></script>
+    <script src="-verso-data/tippy.js"></script>
+    <link rel="stylesheet" href="static/theme.css">
+    <link rel="stylesheet" href="static/fonts/source-serif/source-serif-text.css">
+    <link rel="stylesheet" href="static/fonts/source-code-pro/source-code-pro.css">
+    <link rel="stylesheet" href="static/fonts/source-sans/source-sans-3.css">
+    <link rel="stylesheet" href="static/fonts/noto-sans-mono/noto-sans-mono.css">
+    <link rel="stylesheet" href="-verso-data/katex/katex.css">
+    <link rel="stylesheet" href="-verso-data/tippy-border.css">
+    <style>
+div.paragraph > .eval-steps:not(:first-child), div.paragraph > .eval-steps:not(:first-child) > * {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .eval-steps:not(:last-child), div.paragraph > .eval-steps:not(:last-child) > * {
+  margin-bottom: 0.5rem;
+}
+
+.eval-steps .hl.lean.block {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+</style><style>
+.shell-command {
+
+}
+.shell-command.inline > * {
+  display: inline;
+  white-space: pre;
+}
+.shell-command.inline .command::before {
+  content: "$ ";
+  font-weight: 600;
+}
+</style><style>
+.shell-command {
+
+}
+.shell-command.block > * {
+  display: block;
+  white-space: pre;
+}
+.shell-command .command .prompt {
+  font-weight: 600;
+}
+
+div.paragraph > .shell-command:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .shell-command:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style><style>
+
+.hl.lean {
+  white-space: pre;
+  font-weight: normal;
+  font-style: normal;
+}
+
+.hl.lean .keyword {
+  font-weight : bold;
+}
+
+.hl.lean .var {
+  font-style: italic;
+  position: relative;
+}
+
+.hover-container {
+  width: 0;
+  height: 0;
+  position: relative;
+  display: inline;
+}
+
+.hl.lean a {
+  color: inherit;
+  text-decoration: currentcolor underline dotted;
+}
+
+.hl.lean a:hover {
+  text-decoration: currentcolor underline solid;
+}
+
+.hl.lean .hover-info {
+  white-space: normal;
+}
+
+.hl.lean .token .hover-info {
+  display: none;
+  position: absolute;
+  background-color: #e5e5e5;
+  border: 1px solid black;
+  padding: 0.5rem;
+  z-index: 300;
+  font-size: inherit;
+}
+
+.hl.lean .hover-info.messages {
+  max-height: 10rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  padding: 0 0.5rem 0 0;
+  display: block;
+}
+
+.hl.lean .hover-info code {
+  white-space: pre-wrap;
+}
+
+.hl.lean .hover-info.messages > code {
+  padding: 0.5rem;
+  display: block;
+  width: fit-content;
+}
+
+.hl.lean .hover-info.messages > code:only-child {
+  margin: 0;
+}
+
+.hl.lean .hover-info.messages > code {
+  margin: 0.1rem;
+}
+
+.hl.lean .hover-info.messages > code:not(:first-child) {
+  margin-top: 0rem;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .has-info:hover > .hover-container > .hover-info:not(.tactic *),
+  .hl.lean .tactic:has(> .tactic-toggle:checked) .has-info:hover > .hover-container > .hover-info,
+  .hl.lean .token:hover > .hover-container > .hover-info:not(.has-info *):not(.tactic *),
+  .hl.lean .tactic:has(> .tactic-toggle:checked) .token:hover > .hover-container > .hover-info:not(.has-info *) {
+    display: inline-block;
+    position: absolute;
+    top: 1rem;
+    font-weight: normal;
+    font-style: normal;
+    width: min-content;
+  }
+}
+*/
+
+.hl.lean.block {
+  display: block;
+}
+
+.hl.lean.inline {
+  display: inline;
+  white-space: pre-wrap;
+}
+
+.hl.lean .token {
+  transition: all 0.25s; /* Slight fade for highlights */
+}
+
+@media (hover: hover) {
+  .hl.lean .token.binding-hl, .hl.lean .literal.string:hover, .hl.lean .token.typed:hover {
+    background-color: #eee;
+    border-radius: 2px;
+    transition: none;
+  }
+}
+
+
+.hl.lean .has-info .token:not(.tactic-state):not(.tactic-state *), .hl.lean .has-info .inter-text:not(.tactic-state):not(.tactic-state *) {
+  text-decoration-style: wavy;
+  text-decoration-line: underline;
+  text-decoration-thickness: from-font;
+}
+
+.hl.lean .has-info .hover-info {
+  display: none;
+  position: absolute;
+  transform: translate(0.25rem, 0.3rem);
+  border: 1px solid black;
+  padding: 0.5rem;
+  z-index: 400;
+  text-align: left;
+}
+
+.hl.lean .has-info.error :not(.tactic-state):not(.tactic-state *){
+  text-decoration-color: red;
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.error:hover {
+    background-color: #ffb3b3;
+  }
+}
+
+.hl.lean .hover-info.messages > code.error {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid #ffb3b3;
+}
+
+.tippy-box[data-theme~='error'] .hl.lean .hover-info.messages > code.error {
+  background: none;
+  border: none;
+}
+
+.error pre {
+    color: red;
+}
+
+.hl.lean .has-info.warning :not(.tactic-state):not(.tactic-state *) {
+  text-decoration-color: var(--verso-warning-color);
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.warning:hover {
+    background-color:var(--verso-warning-color);
+  }
+}
+
+.hl.lean .hover-info.messages > code.warning {
+  background-color: var(--verso-warning-color);
+}
+
+.hl.lean .hover-info.messages > code.error {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid var(--verso-warning-color);
+}
+
+.tippy-box[data-theme~='warning'] .hl.lean .hover-info.messages > code.warning {
+  background: none;
+  border: none;
+}
+
+
+.hl.lean .has-info.info :not(.tactic-state):not(.tactic-state *) {
+  text-decoration-color: blue;
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.info:hover {
+    background-color: #4777ff;
+  }
+}
+
+
+.hl.lean .hover-info.messages > code.info {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid #4777ff;
+}
+
+.tippy-box[data-theme~='info'] .hl.lean .hover-info.messages > code.info {
+  background: none;
+  border: none;
+}
+
+.hl.lean div.docstring {
+  font-family: sans-serif;
+  white-space: normal;
+  max-width: 40rem;
+  width: max-content;
+}
+
+.hl.lean div.docstring > :last-child {
+  margin-bottom: 0;
+}
+
+.hl.lean div.docstring > :first-child {
+  margin-top: 0;
+}
+
+.hl.lean .hover-info .sep {
+  display: block;
+  width: auto;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding: 0;
+  height: 1px;
+  border-top: 1px solid #ccc;
+}
+
+.hl.lean code {
+  font-family: monospace;
+}
+
+.hl.lean .tactic-state {
+  display: none;
+  position: relative;
+  left: 2rem;
+  width: fit-content;
+  border: 1px solid #888888;
+  border-radius: 0.1rem;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  background-color: #ffffff;
+  z-index: 200;
+}
+
+.hl.lean.popup .tactic-state {
+  position: static;
+  display: block;
+  width: auto;
+  border: none;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  background-color: #ffffff;
+}
+
+
+.hl.lean .tactic {
+  position: relative;
+}
+
+.hl.lean .tactic-toggle:checked ~ .tactic-state {
+  display: block;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .tactic:hover > .tactic-toggle:not(:checked) ~ .tactic-state {
+    display: block;
+    position: absolute;
+    left: 0;
+    transform: translate(0.25rem, 0);
+    z-index: 250;
+  }
+}
+*/
+
+.hl.lean .tactic > label {
+  position: relative;
+  transition: all 0.5s;
+}
+
+@media (hover: hover) {
+  .hl.lean .tactic > label:hover {
+    border-bottom: 1px dotted #bbbbbb;
+  }
+}
+
+.hl.lean .tactic-toggle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  z-index: -10;
+}
+
+.hl.lean .tactic > label::after {
+  content: "";
+  border: 1px solid #bbbbbb;
+  border-radius: 1rem;
+  height: 0.25rem;
+  vertical-align: middle;
+  width: 0.6rem;
+  margin-left: 0.1rem;
+  margin-right: 0.1rem;
+  display: inline-block;
+  transition: all 0.5s;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .tactic > label:hover::after {
+    border: 1px solid #aaaaaa;
+    background-color: #aaaaaa;
+    transition: all 0.5s;
+  }
+}
+*/
+
+.hl.lean .tactic > label:has(+ .tactic-toggle:checked)::after {
+  border: 1px solid #999999;
+  background-color: #999999;
+  transition: all 0.5s;
+}
+
+.hl.lean .tactic-state .goal + .goal {
+  margin-top: 1.5rem;
+}
+
+.hl.lean .tactic-state summary {
+  margin-left: -0.5rem;
+}
+
+.hl.lean .tactic-state details {
+  padding-left: 0.5rem;
+}
+
+.hl.lean .case-label {
+  display: block;
+  position: relative;
+}
+
+.hl.lean .case-label input[type="checkbox"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  z-index: -10;
+}
+
+.hl.lean .case-label:has(input[type="checkbox"])::before {
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+  background-color: black;
+  content: ' ';
+  transition: ease 0.2s;
+  margin-right: 0.7rem;
+  clip-path: polygon(100% 0, 0 0, 50% 100%);
+  width: 0.6rem;
+  height: 0.6rem;
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]:not(:checked))::before {
+  transform: rotate(-90deg);
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]) {
+
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]:checked) {
+
+}
+
+
+.hl.lean .tactic-state .labeled-case > :not(:first-child) {
+  max-height: 0px;
+  display: block;
+  overflow: hidden;
+  transition: max-height 0.1s ease-in;
+  margin-left: 0.5rem;
+  margin-top: 0.1rem;
+}
+
+.hl.lean .labeled-case:has(.case-label input[type="checkbox"]:checked) > :not(:first-child) {
+  max-height: 100%;
+}
+
+
+.hl.lean .tactic-state .goal-name::before {
+  font-style: normal;
+  content: "case ";
+}
+
+.hl.lean .tactic-state .goal-name {
+  font-style: italic;
+  font-family: monospace;
+}
+
+.hl.lean .tactic-state .hypotheses {
+  display: table;
+}
+
+.hl.lean .tactic-state .hypothesis {
+  display: table-row;
+}
+
+.hl.lean .tactic-state .hypothesis > * {
+  display: table-cell;
+}
+
+
+.hl.lean .tactic-state .hypotheses .colon {
+  text-align: center;
+  min-width: 1rem;
+}
+
+.hl.lean .tactic-state .hypotheses .name {
+  text-align: right;
+}
+
+.hl.lean .tactic-state .hypotheses .name,
+.hl.lean .tactic-state .hypotheses .type,
+.hl.lean .tactic-state .conclusion .type {
+  font-family: monospace;
+}
+
+.tippy-box[data-theme~='lean'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 1px solid black;
+}
+.tippy-box[data-theme~='lean'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: #e5e5e5;
+}
+
+.tippy-box[data-theme~='message'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #e5e5e5;
+  border-width: 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='top'] > .tippy-arrow::after {
+  bottom: -11px;
+  border-width: 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-width: 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='bottom'] > .tippy-arrow::after {
+  top: -11px;
+  border-width: 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: #e5e5e5;
+  border-width: 11px 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='left'] > .tippy-arrow::after {
+  right: -11px;
+  border-width: 11px 0 11px 11px;
+}
+
+.tippy-box[data-theme~='message'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: #e5e5e5;
+  border-width: 11px 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='right'] > .tippy-arrow::after {
+  left: -11px;
+  border-width: 11px 11px 11px 0;
+}
+
+
+
+.tippy-box[data-theme~='warning'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid var(--verso-warning-color);
+}
+
+.tippy-box[data-theme~='error'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid #f7a7af;
+}
+
+.tippy-box[data-theme~='info'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid #99b3c2;
+}
+
+.tippy-box[data-theme~='tactic'] {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: white;
+}
+
+</style><style>
+.example-file {
+  white-space: normal;
+  font-family: var(--verso-structure-font-family);
+  margin: 1rem;
+  width: fit-content;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+
+  /* These are necessary for the container to behave nicely on mobile */
+  overflow-x: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.example-file::before {
+  counter-reset: linenumber;
+}
+.example-file > .line {
+  display: block;
+  white-space: pre;
+  counter-increment: linenumber;
+  font-family: var(--verso-code-font-family);
+}
+.example-file > .line::before {
+  -webkit-user-select: none;
+  display: inline-block;
+  content: counter(linenumber);
+  border-right: 1px solid #ddd;
+  width: 2em;
+  padding-right: 0.25em;
+  margin-right: 0.25em;
+  font-family: var(--verso-code-font-family);
+  text-align: right;
+}
+.example-file > .line::after {
+  -webkit-user-select: none;
+  display: inline-block;
+  content: "⏎";
+  opacity: 0;
+}
+.example-file > .line:hover::after {
+  opacity: 1;
+}
+.example-file > .line:hover, .example-file > .line:hover::before {
+  background-color: #eee;
+}
+.example-file > .empty {
+  display: block;
+  white-space: pre;
+  font-family: var(--verso-code-font-family);
+  font-style: italic;
+}
+.example-file > .empty::before {
+  -webkit-user-select: none;
+  display: inline-block;
+  content: "";
+  border-right: 1px solid #ddd;
+  width: 2em;
+  padding-right: 0.25em;
+  margin-right: 0.25em;
+  font-family: var(--verso-code-font-family);
+  text-align: right;
+}
+</style><style>
+table.tabular {
+  margin: auto;
+  border-spacing: 1rem;
+}
+table.tabular.left-align {
+  margin-right: auto;
+  margin-left: 0;
+}
+table.tabular.center-align {
+  margin: auto;
+}
+table.tabular.right-align {
+  margin-left auto;
+  margin-right: 0;
+}
+table.tabular td, table.tabular th {
+  text-align: left;
+  vertical-align: top;
+}
+table.tabular td > p:first-child, table.tabular th > p:first-child {
+  margin-top: 0;
+}
+table.tabular td > p:last-child, table.tabular th > p:first-child {
+  margin-bottom: 0;
+}
+</style><style>
+.shell-commands {
+
+}
+.shell-commands > * {
+  display: block;
+  white-space: pre;
+}
+.shell-commands .command::before {
+  content: "$ ";
+  font-weight: 600;
+}
+
+div.paragraph > .shell-commands:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .shell-commands:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style><style>
+.eq-steps .hl.lean.block {
+  background-color: #f6f7f6;
+  padding: 1rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+.eq-steps .reason {
+  font-style: italic;
+  margin-left: 2.5em;
+  display: flex;
+}
+.eq-steps .reason::before {
+  content: "={";
+  font-family: var(--verso-code-font-family);
+  font-style: normal;
+  font-weight: 600;
+  margin-right: 0.5em;
+  align-self: center;
+}
+.eq-steps .reason > p {
+  margin: 0;
+  max-width: 25em;
+  align-self: center;
+}
+.eq-steps .reason::after {
+  content: "}=";
+  font-family: var(--verso-code-font-family);
+  font-style: normal;
+  font-weight: 600;
+  margin-left: 1em;
+  align-self: center;
+}
+</style><style>
+div.paragraph > .eq-steps:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .eq-steps:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style><script>
+      
+window.onload = () => {
+
+    // Don't show hovers inside of closed tactic states
+    function blockedByTactic(elem) {
+      let parent = elem.parentNode;
+      while (parent && "classList" in parent) {
+        if (parent.classList.contains("tactic")) {
+          const toggle = parent.querySelector("input.tactic-toggle");
+          if (toggle) {
+            return !toggle.checked;
+          }
+        }
+        parent = parent.parentNode;
+      }
+      return false;
+    }
+
+    function blockedByTippy(elem) {
+      // Don't show a new hover until the old ones are all closed.
+      // Scoped to the nearest "top-level block" to avoid being O(n) in the size of the document.
+      var block = elem;
+      const topLevel = new Set(["section", "body", "html", "nav", "header"]);
+      while (block.parentNode && !topLevel.has(block.parentNode.nodeName.toLowerCase())) {
+        block = block.parentNode;
+      }
+      for (const child of block.querySelectorAll(".token, .has-info")) {
+        if (child._tippy && child._tippy.state.isVisible) { return true };
+      }
+      return false;
+    }
+
+    for (const c of document.querySelectorAll(".hl.lean .token")) {
+        if (c.dataset.binding != "") {
+            c.addEventListener("mouseover", (event) => {
+                if (blockedByTactic(c)) {return;}
+                const context = c.closest(".hl.lean").dataset.leanContext;
+                for (const example of document.querySelectorAll(".hl.lean")) {
+                    if (example.dataset.leanContext == context) {
+                        for (const tok of example.querySelectorAll(".token")) {
+                            if (c.dataset.binding == tok.dataset.binding) {
+                                tok.classList.add("binding-hl");
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        c.addEventListener("mouseout", (event) => {
+            for (const tok of document.querySelectorAll(".hl.lean .token")) {
+                tok.classList.remove("binding-hl");
+            }
+        });
+    }
+    /* Render docstrings */
+    if ('undefined' !== typeof marked) {
+        for (const d of document.querySelectorAll("code.docstring, pre.docstring")) {
+            const str = d.innerText;
+            const html = marked.parse(str);
+            const rendered = document.createElement("div");
+            rendered.classList.add("docstring");
+            rendered.innerHTML = html;
+            d.parentNode.replaceChild(rendered, d);
+        }
+    }
+    // Add hovers
+    let siteRoot = typeof __versoSiteRoot !== 'undefined' ? __versoSiteRoot : "/";
+    let docsJson = siteRoot + "-verso-docs.json";
+    fetch(docsJson).then((resp) => resp.json()).then((versoDocData) => {
+
+      function hideParentTooltips(element) {
+        let parent = element.parentElement;
+        while (parent) {
+          const tippyInstance = parent._tippy;
+          if (tippyInstance) {
+            tippyInstance.hide();
+          }
+          parent = parent.parentElement;
+        }
+      }
+
+
+
+      const defaultTippyProps = {
+        /* DEBUG -- remove the space: * /
+        onHide(any) { return false; },
+        trigger: "click",
+        // */
+        /* theme: "lean", */
+        maxWidth: "none",
+        appendTo: () => document.body,
+        interactive: true,
+        delay: [100, null],
+        /* ignoreAttributes: true, */
+        followCursor: 'initial',
+        onShow(inst) {
+          if (inst.reference.className == 'tactic') {
+
+            const toggle = inst.reference.querySelector("input.tactic-toggle");
+            if (toggle && toggle.checked) {
+              return false;
+            }
+            hideParentTooltips(inst.reference);
+            //if (blockedByTippy(inst.reference)) { return false; }
+
+          } else if (inst.reference.querySelector(".hover-info") || "versoHover" in inst.reference.dataset) {
+            if (blockedByTactic(inst.reference)) { return false };
+            if (blockedByTippy(inst.reference)) { return false; }
+          } else { // Nothing to show here!
+            return false;
+          }
+        },
+        content (tgt) {
+          const content = document.createElement("span");
+          if (tgt.className == 'tactic') {
+            const state = tgt.querySelector(".tactic-state").cloneNode(true);
+            state.style.display = "block";
+            content.appendChild(state);
+            content.style.display = "block";
+            content.className = "hl lean popup";
+          } else {
+            content.className = "hl lean";
+            content.style.display = "block";
+            content.style.maxHeight = "300px";
+            content.style.overflowY = "auto";
+            content.style.overflowX = "hidden";
+            const hoverId = tgt.dataset.versoHover;
+            const hoverInfo = tgt.querySelector(".hover-info");
+            if (hoverId) { // Docstrings from the table
+              // TODO stop doing an implicit conversion from string to number here
+              let data = versoDocData[hoverId];
+              if (data) {
+                const info = document.createElement("span");
+                info.className = "hover-info";
+                info.style.display = "block";
+                info.innerHTML = data;
+                content.appendChild(info);
+                /* Render docstrings - TODO server-side */
+                if ('undefined' !== typeof marked) {
+                    for (const d of content.querySelectorAll("code.docstring, pre.docstring")) {
+                        const str = d.innerText;
+                        const html = marked.parse(str);
+                        const rendered = document.createElement("div");
+                        rendered.classList.add("docstring");
+                        rendered.innerHTML = html;
+                        d.parentNode.replaceChild(rendered, d);
+                    }
+                }
+              } else {
+                content.innerHTML = "Failed to load doc ID: " + hoverId;
+              }
+            } else if (hoverInfo) { // The inline info, still used for compiler messages
+              content.appendChild(hoverInfo.cloneNode(true));
+            }
+          }
+          return content;
+        }
+      };
+
+
+
+      const addTippy = (selector, props) => {
+        tippy(selector, Object.assign({}, defaultTippyProps, props));
+      };
+      document.querySelectorAll('.hl.lean .const.token, .hl.lean .keyword.token, .hl.lean .literal.token, .hl.lean .option.token, .hl.lean .var.token, .hl.lean .typed.token').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'lean');
+      });
+      document.querySelectorAll('.hl.lean .has-info.warning').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'warning message');
+      });
+      document.querySelectorAll('.hl.lean .has-info.info').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'info message');
+      });
+      document.querySelectorAll('.hl.lean .has-info.error').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'error message');
+      });
+      document.querySelectorAll('.hl.lean .tactic').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'tactic');
+      });
+      let insts = tippy('.hl.lean .const.token, .hl.lean .keyword.token, .hl.lean .literal.token, .hl.lean .option.token, .hl.lean .var.token, .hl.lean .typed.token, .hl.lean .has-info, .hl.lean .tactic', defaultTippyProps);
+
+
+
+      /*
+      tippy('.hl.lean .tactic', {
+        allowHtml: true,
+
+        onHide(any) { return false; },
+        trigger: "click",
+
+        maxWidth: "none",
+        onShow(inst) {
+          const toggle = inst.reference.querySelector("input.tactic-toggle");
+          if (toggle && toggle.checked) {
+            return false;
+          }
+          if (blockedByTippy(inst.reference)) { return false; }
+        },
+        content (tgt) {
+          const content = document.createElement("span");
+          const state = tgt.querySelector(".tactic-state").cloneNode(true);
+          state.style.display = "block";
+          content.appendChild(state);
+          content.style.display = "block";
+          content.className = "hl lean popup";
+          return content;
+        }
+      });
+      */
+  });
+}
+</script>
+    </head>
+  <body>
+    <header>
+      <div class="header-logo-wrapper">
+        <a href="" id="logo"><img src="static/lean_logo.svg"></a></div>
+      <div class="header-title-wrapper">
+        <a href="" class="header-title"><h1>
+            Functional Programming in Lean</h1>
+          </a></div>
+      </header>
+    <label for="toggle-toc" id="toggle-toc-click"><span class="line line1"></span><span class="line line2"></span><span class="line line3"></span></label><div class="with-toc">
+      <div class="toc-backdrop" onclick="document.getElementById('toggle-toc-click')?.click()"></div>
+      <nav id="toc">
+        <input type="checkbox" id="toggle-toc"><div class="first">
+          <a href="" class="toc-title"><h1>
+              Functional Programming in Lean</h1>
+            </a><div class="split-tocs">
+            <div class="split-toc book">
+              <div class="title">
+                <label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot"></label><span class="">Table of Contents</span></div>
+              <table><tr class="unnumbered"><td class="num"><td><a href="Introduction/#Functional-Programming-in-Lean--Introduction">Introduction</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Acknowledgments/#Functional-Programming-in-Lean--Acknowledgments">Acknowledgments</a></td></tr><tr class="numbered"><td class="num">1.</td><td><a href="Getting-to-Know-Lean/#getting-to-know">Getting to Know Lean</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Hello___-World___/#hello-world">Hello, World!</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Propositions___-Proofs___-and-Indexing/#props-proofs-indexing">Interlude: Propositions, Proofs, and Indexing</a></td></tr><tr class="current numbered"><td class="num">3.</td><td><a href="Overloading-and-Type-Classes/#Functional-Programming-in-Lean--Overloading-and-Type-Classes">Overloading and Type Classes</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="Monads/#Functional-Programming-in-Lean--Monads">Monads</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads">Functors, Applicative Functors, and Monads</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Monad-Transformers/#Functional-Programming-in-Lean--Monad-Transformers">Monad Transformers</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Programming-with-Dependent-Types/#Functional-Programming-in-Lean--Programming-with-Dependent-Types">Programming with Dependent Types</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Tactics___-Induction___-and-Proofs/#Functional-Programming-in-Lean--Interlude___-Tactics___-Induction___-and-Proofs">Interlude: Tactics, Induction, and Proofs</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Programming___-Proving___-and-Performance/#Functional-Programming-in-Lean--Programming___-Proving___-and-Performance">Programming, Proving, and Performance</a></td></tr><tr class="numbered"><td class="num">9.</td><td><a href="Next-Steps/#next-steps">Next Steps</a></td></tr></table></div>
+            <div class="split-toc">
+              <div class="title">
+                <label for="--verso-manual-toc-Functional-Programming-in-Lean--Overloading-and-Type-Classes" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-Functional-Programming-in-Lean--Overloading-and-Type-Classes" checked="checked"></label><span class="number">3.</span> <span class=""><a href="Overloading-and-Type-Classes/#Functional-Programming-in-Lean--Overloading-and-Type-Classes">Overloading and Type Classes</a></span></div>
+              <table><tr class="current numbered"><td class="num">3.1.</td><td><a href="Overloading-and-Type-Classes/Positive-Numbers/#positive-numbers">Positive Numbers</a></td></tr><tr class="numbered"><td class="num">3.2.</td><td><a href="Overloading-and-Type-Classes/Type-Classes-and-Polymorphism/#tc-polymorphism">Type Classes and Polymorphism</a></td></tr><tr class="numbered"><td class="num">3.3.</td><td><a href="Overloading-and-Type-Classes/Controlling-Instance-Search/#out-params">Controlling Instance Search</a></td></tr><tr class="numbered"><td class="num">3.4.</td><td><a href="Overloading-and-Type-Classes/Arrays-and-Indexing/#Functional-Programming-in-Lean--Overloading-and-Type-Classes--Arrays-and-Indexing">Arrays and Indexing</a></td></tr><tr class="numbered"><td class="num">3.5.</td><td><a href="Overloading-and-Type-Classes/Standard-Classes/#Functional-Programming-in-Lean--Overloading-and-Type-Classes--Standard-Classes">Standard Classes</a></td></tr><tr class="numbered"><td class="num">3.6.</td><td><a href="Overloading-and-Type-Classes/Coercions/#Functional-Programming-in-Lean--Overloading-and-Type-Classes--Coercions">Coercions</a></td></tr><tr class="numbered"><td class="num">3.7.</td><td><a href="Overloading-and-Type-Classes/Additional-Conveniences/#Functional-Programming-in-Lean--Overloading-and-Type-Classes--Additional-Conveniences">Additional Conveniences</a></td></tr><tr class="numbered"><td class="num">3.8.</td><td><a href="Overloading-and-Type-Classes/Summary/#Functional-Programming-in-Lean--Overloading-and-Type-Classes--Summary">Summary</a></td></tr></table></div>
+            <div class="split-toc">
+              <div class="title">
+                <label for="--verso-manual-toc-positive-numbers" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-positive-numbers" checked="checked"></label><span class="number">3.1.</span> <span class="current"><a href="Overloading-and-Type-Classes/Positive-Numbers/#positive-numbers">Positive Numbers</a></span></div>
+              <table><tr class="numbered"><td class="num">3.1.1.</td><td><a href="Overloading-and-Type-Classes/Positive-Numbers/#Functional-Programming-in-Lean--Overloading-and-Type-Classes--Positive-Numbers--Classes-and-Instances">Classes and Instances</a></td></tr><tr class="numbered"><td class="num">3.1.2.</td><td><a href="Overloading-and-Type-Classes/Positive-Numbers/#overloaded-addition">Overloaded Addition</a></td></tr><tr class="numbered"><td class="num">3.1.3.</td><td><a href="Overloading-and-Type-Classes/Positive-Numbers/#Functional-Programming-in-Lean--Overloading-and-Type-Classes--Positive-Numbers--Conversion-to-Strings">Conversion to Strings</a></td></tr><tr class="numbered"><td class="num">3.1.4.</td><td><a href="Overloading-and-Type-Classes/Positive-Numbers/#Functional-Programming-in-Lean--Overloading-and-Type-Classes--Positive-Numbers--Overloaded-Multiplication">Overloaded Multiplication</a></td></tr><tr class="numbered"><td class="num">3.1.5.</td><td><a href="Overloading-and-Type-Classes/Positive-Numbers/#literal-numbers">Literal Numbers</a></td></tr><tr class="numbered"><td class="num">3.1.6.</td><td><a href="Overloading-and-Type-Classes/Positive-Numbers/#Functional-Programming-in-Lean--Overloading-and-Type-Classes--Positive-Numbers--Exercises">Exercises</a></td></tr></table></div>
+            </div>
+          </div>
+        <div class="last">
+          <ul id="meta-links">
+            <li>
+              <a href="https://github.com/leanprover/fp-lean">Source Code</a></li>
+            <li>
+              <a href="https://github.com/leanprover/fp-lean/issues">Report Issues</a></li>
+            </ul>
+          </div>
+        </nav>
+      <main><div class="content-wrapper">
+          <nav class="prev-next-buttons">
+            <a class="local-button active" href="Overloading-and-Type-Classes/#Functional-Programming-in-Lean--Overloading-and-Type-Classes" rel="prev" title="3. Overloading and Type Classes"><span class="arrow">←</span><span class="where">3. Overloading and Type Classes</span></a><a class="local-button active" href="Overloading-and-Type-Classes/Type-Classes-and-Polymorphism/#tc-polymorphism" rel="next" title="3.2. Type Classes and Polymorphism"><span class="where">3.2. Type Classes and Polymorphism</span><span class="arrow">→</span></a></nav>
+          <section>
+            <h1>
+              3.1. Positive Numbers<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&name=positive-numbers" title="Permalink">🔗</a></span></h1>
+            <p>
+              In some applications, only positive numbers make sense.
+For example, compilers and interpreters typically use one-indexed line and column numbers for source positions, and a datatype that represents only non-empty lists will never report a length of zero.
+Rather than relying on natural numbers, and littering the code with assertions that the number is not zero, it can be useful to design a datatype that represents only positive numbers.</p>
+            <p>
+              One way to represent positive numbers is very similar to <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code>, except with <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos.one" data-verso-hover="384">one</span></code> as the base case instead of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat.zero" data-verso-hover="26">zero</span></code>:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.inductive-1899" data-verso-hover="96">inductive</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-1920">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.one" data-verso-hover="384">one</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">succ</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code><p>
+              This datatype represents exactly the intended set of values, but it is not very convenient to use.
+For example, numeric literals are rejected:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-2399">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">failed to synthesize
+  OfNat Pos 7
+numerals are polymorphic in Lean, but the numeral `7` cannot be used in a context where the expected type is
+  Pos
+due to the absence of the instance above
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</code></span></span><span class="typed token" data-binding="" data-verso-hover="388">7</span></span></code><div class="error">
+              <pre>failed to synthesize
+  OfNat Pos 7
+numerals are polymorphic in Lean, but the numeral `7` cannot be used in a context where the expected type is
+  Pos
+due to the absence of the instance above
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</pre></div>
+            <p>
+              Instead, the constructors must be used directly:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-2479">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.one" data-verso-hover="384">Pos.one</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span></code><p>
+              Similarly, addition and multiplication are not easy to use:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-2802">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-fourteen" data-verso-hover="389">fourteen</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">failed to synthesize
+  HAdd Pos Pos ?m.872
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</code></span></span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span></span></code><div class="error">
+              <pre>failed to synthesize
+  HAdd Pos Pos ?m.872
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</pre></div>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-3081">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-fortyNine" data-verso-hover="390">fortyNine</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">failed to synthesize
+  HMul Pos Pos ?m.905
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</code></span></span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span><span class="inter-text"> </span><span class="unknown token" data-binding="">*</span><span class="inter-text"> </span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span></span></code><div class="error">
+              <pre>failed to synthesize
+  HMul Pos Pos ?m.905
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</pre></div>
+            <p>
+              Each of these error messages begins with <code>failed to synthesize</code>.
+This indicates that the error is due to an overloaded operation that has not been implemented, and it describes the type class that must be implemented.</p>
+            <section>
+              <h2 id="Functional-Programming-in-Lean--Overloading-and-Type-Classes--Positive-Numbers--Classes-and-Instances">
+                3.1.1. Classes and Instances</h2>
+              <p>
+                A type class consists of a name, some parameters, and a collection of <span id="--tech-term-methods" class="def-technical-term"><em>methods</em></span>.
+The parameters describe the types for which overloadable operations are being defined, and the methods are the names and type signatures of the overloadable operations.
+Once again, there is a terminology clash with object-oriented languages.
+In object-oriented programming, a method is essentially a function that is connected to a particular object in memory, with special access to the object's private state.
+Objects are interacted with via their methods.
+In Lean, the term “method” refers to an operation that has been declared to be overloadable, with no special connection to objects or values or private fields.</p>
+              <p>
+                One way to overload addition is to define a type class named <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span></code>, with an addition method named <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">plus</span></code>.
+Once an instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span></code> for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> has been defined, it becomes possible to add two <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code>s using <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">Plus.plus</span></code>:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">8</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-1174" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">Plus.plus</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">5</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">3</span></code><div class="information">
+                <pre>8</pre></div>
+              <p>
+                Adding more instances allows <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">Plus.plus</span></code> to take more types of arguments.</p>
+              <p>
+                In the following type class declaration, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span></code> is the name of the class, <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span></code> is the only argument, and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">plus</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span></code> is the only method:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.classTk-873">class</span><span class="inter-text"> </span><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-896">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">plus</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span></code><p>
+                This declaration says that there is a type class <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span></code> that overloads operations with respect to a type <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span></code>.
+In particular, there is one overloaded operation called <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">plus</span></code> that takes two <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span></code>s and returns an <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span></code>.</p>
+              <p>
+                Type classes are first class, just as types are first class.
+In particular, a type class is another kind of type.
+The type of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span></code> is <code class="hl lean inline" data-lean-context="examples"><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span></code>, because it takes a type as an argument (<code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span></code>) and results in a new type that describes the overloading of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span></code>'s operation for <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.323" data-verso-hover="113">α</span></code>.</p>
+              <p>
+                To overload <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus.plus" data-verso-hover="393">plus</span></code> for a particular type, write an instance:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-1047">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-1067">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Plus.plus" data-verso-hover="393">plus</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat.add" data-verso-hover="394">Nat.add</span></code><p>
+                The colon after <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-1047">instance</span></code> indicates that <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> is indeed a type.
+Each method of class <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span></code> should be assigned a value using <code class="hl lean inline" data-lean-context="examples"><span class="unknown token" data-binding="">:=</span></code>.
+In this case, there is only one method: <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus.plus" data-verso-hover="393">plus</span></code>.</p>
+              <p>
+                By default, type class methods are defined in a namespace with the same name as the type class.
+It can be convenient to <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.open-1248" data-verso-hover="240">open</span></code> the namespace so that users don't need to type the name of the class first.
+Parentheses in an <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">open</span></code> command indicate that only the indicated names from the namespace are to be made accessible:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.open-1248" data-verso-hover="240">open</span><span class="inter-text"> </span><span class="unknown token" data-binding="">Plus</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">plus</span><span class="unknown token" data-binding="">)</span></code><code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">8</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-1353" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">plus</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">5</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">3</span></code><div class="information">
+                <pre>8</pre></div>
+              <p>
+                Defining an addition function for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code> and an instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code> allows <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos.plus" data-verso-hover="395">plus</span></code> to be used to add both <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> values:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-3169">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.plus" data-verso-hover="395">Pos.plus</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.one" data-verso-hover="384">Pos.one</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.941" data-verso-hover="388">k</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.941" data-verso-hover="388">k</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.959" data-verso-hover="388">n</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.960" data-verso-hover="388">k</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.959" data-verso-hover="388">n</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-Pos.plus" data-verso-hover="395">plus</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.960" data-verso-hover="388">k</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
+</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-3275">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-3295">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Plus.plus" data-verso-hover="396">plus</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.plus" data-verso-hover="395">Pos.plus</span><span class="inter-text">
+</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-3321">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-fourteen" data-verso-hover="389">fourteen</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">plus</span><span class="inter-text"> </span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span><span class="inter-text"> </span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span></code><p>
+                Because there is not yet an instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus" data-verso-hover="391">Plus</span><span class="inter-text"> </span><span class="const token" data-binding="const-Float" data-verso-hover="59">Float</span></code>, attempting to add two floating-point numbers with <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">plus</span></code> fails with a familiar message:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-1724" data-verso-hover="7">#eval</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">failed to synthesize
+  Plus Float
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</code></span></span><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">plus</span><span class="inter-text"> </span><span class="unknown token" data-binding="">5.2</span><span class="inter-text"> </span><span class="unknown token" data-binding="">917.25861</span></span></code><div class="error">
+                <pre>failed to synthesize
+  Plus Float
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</pre></div>
+              <p>
+                These errors mean that Lean was unable to find an instance for a given type class.</p>
+              </section>
+            <section>
+              <h2 id="overloaded-addition">
+                3.1.2. Overloaded Addition<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&name=overloaded-addition" title="Permalink">🔗</a></span></h2>
+              <p>
+                Lean's built-in addition operator is syntactic sugar for a type class called <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-HAdd" data-verso-hover="397">HAdd</span></code>, which flexibly allows the arguments to addition to have different types.
+<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-HAdd" data-verso-hover="397">HAdd</span></code> is short for <em>heterogeneous addition</em>.
+For example, an <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-HAdd" data-verso-hover="397">HAdd</span></code> instance can be written to allow a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> to be added to a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Float" data-verso-hover="59">Float</span></code>, resulting in a new <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Float" data-verso-hover="59">Float</span></code>.
+When a programmer writes <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.1214" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.1216" data-verso-hover="190">y</span></code>, it is interpreted as meaning <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-HAdd.hAdd" data-verso-hover="341">HAdd.hAdd</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.1214" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.1216" data-verso-hover="190">y</span></code>.</p>
+              <p>
+                While an understanding of the full generality of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-HAdd" data-verso-hover="397">HAdd</span></code> relies on features that are discussed in <a href="Overloading-and-Type-Classes/Controlling-Instance-Search/#out-params">another section in this chapter</a>, there is a simpler type class called <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Add" data-verso-hover="383">Add</span></code> that does not allow the types of the arguments to be mixed.
+The Lean libraries are set up so that an instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Add" data-verso-hover="383">Add</span></code> will be found when searching for an instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-HAdd" data-verso-hover="397">HAdd</span></code> in which both arguments have the same type.</p>
+              <p>
+                Defining an instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Add" data-verso-hover="383">Add</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code> allows <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code> values to use ordinary addition syntax:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-3403">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Add" data-verso-hover="383">Add</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-3422">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Add.add" data-verso-hover="398">add</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.plus" data-verso-hover="395">Pos.plus</span></code><code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-3511">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Extra.fourteen" data-verso-hover="389">fourteen</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span></code></section>
+            <section>
+              <h2 id="Functional-Programming-in-Lean--Overloading-and-Type-Classes--Positive-Numbers--Conversion-to-Strings">
+                3.1.3. Conversion to Strings</h2>
+              <p>
+                Another useful built-in class is called <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ToString" data-verso-hover="399">ToString</span></code>.
+Instances of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ToString" data-verso-hover="399">ToString</span></code> provide a standard way of converting values from a given type into strings.
+For example, a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ToString" data-verso-hover="399">ToString</span></code> instance is used when a value occurs in an interpolated string, and it determines how the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-IO.println" data-verso-hover="250">IO.println</span></code> function used at the <a href="Hello___-World___/Running-a-Program/#running-a-program">beginning of the description of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-IO" data-verso-hover="2">IO</span></code></a> will display a value.</p>
+              <p>
+                For example, one way to convert a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code> into a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-String" data-verso-hover="35">String</span></code> is to reveal its inner structure.
+The function <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Argh.posToString" data-verso-hover="400">posToString</span></code> takes a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Bool" data-verso-hover="40">Bool</span></code> that determines whether to parenthesize uses of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span></code>, which should be <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Bool.true" data-verso-hover="97">true</span></code> in the initial call to the function and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Bool.false" data-verso-hover="19">false</span></code> in all recursive calls.</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-4343">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Argh.posToString" data-verso-hover="400">posToString</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.2306" data-verso-hover="305">atTop</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Bool" data-verso-hover="40">Bool</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.2308" data-verso-hover="388">p</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.let-4398" data-verso-hover="212">let</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2466" data-verso-hover="401">paren</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2315" data-verso-hover="39">s</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-termIfThenElse-4413" data-verso-hover="16">if</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2306" data-verso-hover="305">atTop</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-termIfThenElse-4413" data-verso-hover="16">then</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2315" data-verso-hover="39">s</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-termIfThenElse-4413" data-verso-hover="16">else</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="402">"("</span><span class="inter-text"> </span><span class="unknown token" data-binding="">++</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2315" data-verso-hover="39">s</span><span class="inter-text"> </span><span class="unknown token" data-binding="">++</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="403">")"</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-4452" data-verso-hover="100">match</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2308" data-verso-hover="388">p</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-4452" data-verso-hover="100">with</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.one" data-verso-hover="384">Pos.one</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="404">"Pos.one"</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2480" data-verso-hover="388">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2466" data-verso-hover="401">paren</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-termS!_-4514">s!</span><span class="unknown token" data-binding="">"Pos.succ {</span><span class="const token" data-binding="const-Argh.posToString" data-verso-hover="400">posToString</span><span class="inter-text"> </span><span class="const token" data-binding="const-Bool.false" data-verso-hover="19">false</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2480" data-verso-hover="388">n</span><span class="unknown token" data-binding="">}"</span></code><p>
+                Using this function for a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ToString" data-verso-hover="399">ToString</span></code> instance:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-4613">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-ToString" data-verso-hover="399">ToString</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-4637">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-ToString.toString" data-verso-hover="405">toString</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Argh.posToString" data-verso-hover="400">posToString</span><span class="inter-text"> </span><span class="const token" data-binding="const-Bool.true" data-verso-hover="97">true</span></code><p>
+                results in informative, yet overwhelming, output:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">"There are Pos.succ (Pos.succ (Pos.succ (Pos.succ (Pos.succ (Pos.succ Pos.one)))))"</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-4840" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-termS!_-4846">s!</span><span class="unknown token" data-binding="">"There are {</span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span><span class="unknown token" data-binding="">}"</span></code><div class="information">
+                <pre>"There are Pos.succ (Pos.succ (Pos.succ (Pos.succ (Pos.succ (Pos.succ Pos.one)))))"</pre></div>
+              <p>
+                On the other hand, every positive number has a corresponding <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code>.
+Converting it to a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> and then using the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ToString" data-verso-hover="399">ToString</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> instance (that is, the overloading of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ToString" data-verso-hover="399">ToString</span></code> for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code>) is a quick way to generate much shorter output:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-4195">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.toNat" data-verso-hover="406">Pos.toNat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.one" data-verso-hover="384">Pos.one</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2133" data-verso-hover="388">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2133" data-verso-hover="388">n</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-Pos.toNat" data-verso-hover="406">toNat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span></code><code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-4945">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-ToString" data-verso-hover="399">ToString</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-4969">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-ToString.toString" data-verso-hover="405">toString</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2826" data-verso-hover="388">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-ToString.toString" data-verso-hover="407">toString</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.2826" data-verso-hover="388">x</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-Pos.toNat" data-verso-hover="406">toNat</span><span class="unknown token" data-binding="">)</span></code><code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">"There are 7"</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-5105" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-termS!_-5111">s!</span><span class="unknown token" data-binding="">"There are {</span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span><span class="unknown token" data-binding="">}"</span></code><div class="information">
+                <pre>"There are 7"</pre></div>
+              <p>
+                When more than one instance is defined, the most recent takes precedence.
+Additionally, if a type has a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ToString" data-verso-hover="399">ToString</span></code> instance, then it can be used to display the result of <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">#eval</span></code> even if the type in question was not defined with <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-null-33417">deriving</span><span class="inter-text"> </span><span class="const token" data-binding="const-Repr" data-verso-hover="64">Repr</span></code>, so <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-5223" data-verso-hover="7">#eval</span><span class="inter-text"> </span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span></code> outputs <code>7</code>.</p>
+              </section>
+            <section>
+              <h2 id="Functional-Programming-in-Lean--Overloading-and-Type-Classes--Positive-Numbers--Overloaded-Multiplication">
+                3.1.4. Overloaded Multiplication</h2>
+              <p>
+                For multiplication, there is a type class called <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-HMul" data-verso-hover="408">HMul</span></code> that allows mixed argument types, just like <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-HAdd" data-verso-hover="397">HAdd</span></code>.
+Just as <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.1214" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.1216" data-verso-hover="190">y</span></code> is interpreted as <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-HAdd.hAdd" data-verso-hover="341">HAdd.hAdd</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.1214" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.1216" data-verso-hover="190">y</span></code>, <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.3048" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">*</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.3050" data-verso-hover="190">y</span></code> is interpreted as <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-HMul.hMul" data-verso-hover="409">HMul.hMul</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.3048" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.3050" data-verso-hover="190">y</span></code>.
+For the common case of multiplication of two arguments with the same type, a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mul" data-verso-hover="410">Mul</span></code> instance suffices.</p>
+              <p>
+                An instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mul" data-verso-hover="410">Mul</span></code> allows ordinary multiplication syntax to be used with <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code>:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-5464">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.mul" data-verso-hover="411">Pos.mul</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.one" data-verso-hover="384">Pos.one</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.3379" data-verso-hover="388">k</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.3379" data-verso-hover="388">k</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.3397" data-verso-hover="388">n</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.3398" data-verso-hover="388">k</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.3397" data-verso-hover="388">n</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-Pos.mul" data-verso-hover="411">mul</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.3398" data-verso-hover="388">k</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.3398" data-verso-hover="388">k</span><span class="inter-text">
+</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-5552">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Mul" data-verso-hover="410">Mul</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-5571">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Mul.mul" data-verso-hover="412">mul</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.mul" data-verso-hover="411">Pos.mul</span></code><p>
+                With this instance, multiplication works as expected:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">[7, 49, 14]</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-5674" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span><span class="inter-text"> </span><span class="unknown token" data-binding="">*</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.one" data-verso-hover="384">Pos.one</span><span class="unknown token" data-binding="">,</span><span class="inter-text">
+</span><span class="inter-text">       </span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span><span class="inter-text"> </span><span class="unknown token" data-binding="">*</span><span class="inter-text"> </span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span><span class="unknown token" data-binding="">,</span><span class="inter-text">
+</span><span class="inter-text">       </span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.one" data-verso-hover="384">Pos.one</span><span class="inter-text"> </span><span class="unknown token" data-binding="">*</span><span class="inter-text"> </span><span class="const token" data-binding="const-seven" data-verso-hover="387">seven</span><span class="unknown token" data-binding="">]</span></code><div class="information">
+                <pre>[7, 49, 14]</pre></div>
+              </section>
+            <section>
+              <h2 id="literal-numbers">
+                3.1.5. Literal Numbers<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&name=literal-numbers" title="Permalink">🔗</a></span></h2>
+              <p>
+                It is quite inconvenient to write out a sequence of constructors for positive numbers.
+One way to work around the problem would be to provide a function to convert a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> into a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code>.
+However, this approach has downsides.
+First off, because <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code> cannot represent <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">0</span></code>, the resulting function would either convert a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> to a bigger number, or it would return <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Option" data-verso-hover="142">Option</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code>.
+Neither is particularly convenient for users.
+Secondly, the need to call the function explicitly would make programs that use positive numbers much less convenient to write than programs that use <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code>.
+Having a trade-off between precise types and convenient APIs means that the precise types become less useful.</p>
+              <p>
+                There are two type classes that are used to overload numeric literals: <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Zero" data-verso-hover="413">Zero</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-NatLits.OfNat" data-verso-hover="414">OfNat</span></code>.
+Because many types have values that are naturally written with <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">0</span></code>, the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Zero" data-verso-hover="413">Zero</span></code> class allow these specific values to be overridden.
+It is defined as follows:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.classTk-5809">class</span><span class="inter-text"> </span><span class="const token" data-binding="const-NatLits.Zero" data-verso-hover="415">Zero</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.6158" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-5832">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-NatLits.Zero.zero" data-verso-hover="416">zero</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.6158" data-verso-hover="113">α</span></code><p>
+                Because <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">0</span></code> is not a positive number, there should be no instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Zero" data-verso-hover="413">Zero</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code>.</p>
+              <p>
+                In Lean, natural number literals are interpreted using a type class called <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-NatLits.OfNat" data-verso-hover="414">OfNat</span></code>:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.classTk-6049">class</span><span class="inter-text"> </span><span class="const token" data-binding="const-NatLits.OfNat" data-verso-hover="414">OfNat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.6188" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">_</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-6083">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-NatLits.OfNat.ofNat" data-verso-hover="417">ofNat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.6188" data-verso-hover="113">α</span></code><p>
+                This type class takes two arguments: <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.6188" data-verso-hover="113">α</span></code> is the type for which a natural number is overloaded, and the unnamed <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> argument is the actual literal number that was encountered in the program.
+The method <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-NatLits.OfNat.ofNat" data-verso-hover="417">ofNat</span></code> is then used as the value of the numeric literal.
+Because the class contains the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> argument, it becomes possible to define only instances for those values where the number makes sense.</p>
+              <p>
+                <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-NatLits.OfNat" data-verso-hover="414">OfNat</span></code> demonstrates that the arguments to type classes do not need to be types.
+Because types in Lean are first-class participants in the language that can be passed as arguments to functions and given definitions with <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">def</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">abbrev</span></code>, there is no barrier that prevents non-type arguments in positions where a less-flexible language could not permit them.
+This flexibility allows overloaded operations to be provided for particular values as well as particular types.
+Additionally, it allows the Lean standard library to arrange for there to be a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Zero" data-verso-hover="413">Zero</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7774" data-verso-hover="369">α</span></code> instance whenever there's an <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-OfNat" data-verso-hover="418">OfNat</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7469" data-verso-hover="369">α</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">0</span></code> instance, and vice versa.</p>
+              <p>
+                A sum type that represents natural numbers less than four can be defined as follows:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.inductive-6227" data-verso-hover="96">inductive</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4" data-verso-hover="419">LT4</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-6241">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4.zero" data-verso-hover="420">zero</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4.one" data-verso-hover="421">one</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4.two" data-verso-hover="422">two</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4.three" data-verso-hover="423">three</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-null-6282">deriving</span><span class="inter-text"> </span><span class="const token" data-binding="const-Repr" data-verso-hover="64">Repr</span></code><p>
+                While it would not make sense to allow <em>any</em> literal number to be used for this type, numbers less than four clearly make sense:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-6337">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-OfNat" data-verso-hover="418">OfNat</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4" data-verso-hover="419">LT4</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">0</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-6360">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-OfNat.ofNat" data-verso-hover="424">ofNat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4.zero" data-verso-hover="420">LT4.zero</span><span class="inter-text">
+</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-6387">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-OfNat" data-verso-hover="418">OfNat</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4" data-verso-hover="419">LT4</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-6410">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-OfNat.ofNat" data-verso-hover="424">ofNat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4.one" data-verso-hover="421">LT4.one</span><span class="inter-text">
+</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-6436">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-OfNat" data-verso-hover="418">OfNat</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4" data-verso-hover="419">LT4</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-6459">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-OfNat.ofNat" data-verso-hover="424">ofNat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4.two" data-verso-hover="422">LT4.two</span><span class="inter-text">
+</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-6485">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-OfNat" data-verso-hover="418">OfNat</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4" data-verso-hover="419">LT4</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">3</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-6508">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-OfNat.ofNat" data-verso-hover="424">ofNat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4.three" data-verso-hover="423">LT4.three</span></code><p>
+                With these instances, the following examples work:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">LT4.three</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-6619" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="typed token" data-binding="" data-verso-hover="425">3</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4" data-verso-hover="419">LT4</span><span class="unknown token" data-binding="">)</span></code><div class="information">
+                <pre>LT4.three</pre></div>
+              <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">LT4.zero</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-6716" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="typed token" data-binding="" data-verso-hover="425">0</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4" data-verso-hover="419">LT4</span><span class="unknown token" data-binding="">)</span></code><div class="information">
+                <pre>LT4.zero</pre></div>
+              <p>
+                On the other hand, out-of-bounds literals are still not allowed:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-7096" data-verso-hover="7">#eval</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">failed to synthesize
+  OfNat LT4 4
+numerals are polymorphic in Lean, but the numeral `4` cannot be used in a context where the expected type is
+  LT4
+due to the absence of the instance above
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</code></span></span><span class="typed token" data-binding="" data-verso-hover="425">4</span></span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-LT4" data-verso-hover="419">LT4</span><span class="unknown token" data-binding="">)</span></code><div class="error">
+                <pre>failed to synthesize
+  OfNat LT4 4
+numerals are polymorphic in Lean, but the numeral `4` cannot be used in a context where the expected type is
+  LT4
+due to the absence of the instance above
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</pre></div>
+              <p>
+                For <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code>, the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-NatLits.OfNat" data-verso-hover="414">OfNat</span></code> instance should work for <em>any</em> <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> other than <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat.zero" data-verso-hover="26">Nat.zero</span></code>.
+Another way to phrase this is to say that for all natural numbers <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.246" data-verso-hover="5">n</span></code>, the instance should work for <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.246" data-verso-hover="5">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span></code>.
+Just as names like <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.248" data-verso-hover="113">α</span></code> automatically become implicit arguments to functions that Lean fills out on its own, instances can take automatic implicit arguments.
+In this instance, the argument <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.6792" data-verso-hover="5">n</span></code> stands for any <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code>, and the instance is defined for a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> that's one greater:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-7158">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-OfNat" data-verso-hover="418">OfNat</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.6792" data-verso-hover="5">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-7187">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-OfNat.ofNat" data-verso-hover="426">ofNat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="keyword token" data-binding="kw-occ-group-7208">let</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-group-7208">rec</span><span class="inter-text"> </span><span class="const token" data-binding="const-instOfNatPosHAddNatOfNat.natPlusOne" data-verso-hover="427">natPlusOne</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text">
+</span><span class="inter-text">      </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">0</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.one" data-verso-hover="384">Pos.one</span><span class="inter-text">
+</span><span class="inter-text">      </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.6948" data-verso-hover="5">k</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="unknown token" data-binding="">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos.succ" data-verso-hover="386">Pos.succ</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-instOfNatPosHAddNatOfNat.natPlusOne" data-verso-hover="427">natPlusOne</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.6948" data-verso-hover="5">k</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="const token" data-binding="const-instOfNatPosHAddNatOfNat.natPlusOne" data-verso-hover="427">natPlusOne</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.6851" data-verso-hover="5">n</span></code><p>
+                Because <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.6792" data-verso-hover="5">n</span></code> stands for a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> that's one less than what the user wrote, the helper function <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-instOfNatPosHAddNatOfNat.natPlusOne" data-verso-hover="427">natPlusOne</span></code> returns a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code> that's one greater than its argument.
+This makes it possible to use natural number literals for positive numbers, but not for zero:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-7363">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-eight" data-verso-hover="428">eight</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="388">8</span></code><code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-7747">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-zero" data-verso-hover="429">zero</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">failed to synthesize
+  OfNat Pos 0
+numerals are polymorphic in Lean, but the numeral `0` cannot be used in a context where the expected type is
+  Pos
+due to the absence of the instance above
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</code></span></span><span class="typed token" data-binding="" data-verso-hover="388">0</span></span></code><div class="error">
+                <pre>failed to synthesize
+  OfNat Pos 0
+numerals are polymorphic in Lean, but the numeral `0` cannot be used in a context where the expected type is
+  Pos
+due to the absence of the instance above
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</pre></div>
+              </section>
+            <section>
+              <h2 id="Functional-Programming-in-Lean--Overloading-and-Type-Classes--Positive-Numbers--Exercises">
+                3.1.6. Exercises</h2>
+              <section>
+                <h3 id="Functional-Programming-in-Lean--Overloading-and-Type-Classes--Positive-Numbers--Exercises--Another-Representation">
+                  3.1.6.1. Another Representation</h3>
+                <p>
+                  An alternative way to represent a positive number is as the successor of some <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code>.
+Replace the definition of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code> with a structure whose constructor is named <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-AltPos.Pos.succ" data-verso-hover="430">succ</span></code> that contains a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code>:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.structureTk-7828">structure</span><span class="inter-text"> </span><span class="const token" data-binding="const-AltPos.Pos" data-verso-hover="385">Pos</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-7842">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-AltPos.Pos.succ" data-verso-hover="430">succ</span><span class="inter-text"> </span><span class="unknown token" data-binding="">::</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-AltPos.Pos.pred" data-verso-hover="431">pred</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code><p>
+                  Define instances of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Add" data-verso-hover="383">Add</span></code>, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mul" data-verso-hover="410">Mul</span></code>, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ToString" data-verso-hover="399">ToString</span></code>, and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-NatLits.OfNat" data-verso-hover="414">OfNat</span></code> that allow this version of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-AltPos.Pos" data-verso-hover="385">Pos</span></code> to be used conveniently.</p>
+                </section>
+              <section>
+                <h3 id="even-numbers-ex">
+                  3.1.6.2. Even Numbers<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&name=even-numbers-ex" title="Permalink">🔗</a></span></h3>
+                <p>
+                  Define a datatype that represents only even numbers. Define instances of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Add" data-verso-hover="383">Add</span></code>, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mul" data-verso-hover="410">Mul</span></code>, and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ToString" data-verso-hover="399">ToString</span></code> that allow it to be used conveniently.
+<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-NatLits.OfNat" data-verso-hover="414">OfNat</span></code> requires a feature that is introduced in <a href="Overloading-and-Type-Classes/Type-Classes-and-Polymorphism/#tc-polymorphism">the next section</a>.</p>
+                </section>
+              <section>
+                <h3 id="Functional-Programming-in-Lean--Overloading-and-Type-Classes--Positive-Numbers--Exercises--HTTP-Requests">
+                  3.1.6.3. HTTP Requests</h3>
+                <p>
+                  An HTTP request begins with an identification of a HTTP method, such as <code>GET</code> or <code>POST</code>, along with a URI and an HTTP version.
+Define an inductive type that represents an interesting subset of the HTTP methods, and a structure that represents HTTP responses.
+Responses should have a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ToString" data-verso-hover="399">ToString</span></code> instance that makes it possible to debug them.
+Use a type class to associate different <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-IO" data-verso-hover="2">IO</span></code> actions with each HTTP method, and write a test harness as an <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-IO" data-verso-hover="2">IO</span></code> action that calls each method and prints the result.
+</p>
+                </section>
+              </section>
+            </section>
+          <nav class="prev-next-buttons">
+            <a class="local-button active" href="Overloading-and-Type-Classes/#Functional-Programming-in-Lean--Overloading-and-Type-Classes" rel="prev" title="3. Overloading and Type Classes"><span class="arrow">←</span><span class="where">3. Overloading and Type Classes</span></a><a class="local-button active" href="Overloading-and-Type-Classes/Type-Classes-and-Polymorphism/#tc-polymorphism" rel="next" title="3.2. Type Classes and Polymorphism"><span class="where">3.2. Type Classes and Polymorphism</span><span class="arrow">→</span></a></nav>
+          </div>
+        </main></div>
+    </body>
+  </html>
+

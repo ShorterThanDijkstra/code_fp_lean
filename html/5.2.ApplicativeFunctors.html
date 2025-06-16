@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      (function(){
+  const {protocol:proto, host:hostName, pathname:path, search:srch, hash:hsh} = window.location;
+  if (!(path.endsWith("/") || path.endsWith(".html"))) {
+    window.location.replace(`${proto}//${hostName}${path}/${srch}${hsh}`);
+  }
+})()</script>
+    <base href="./../../"><meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>Applicative Functors</title><link rel="stylesheet" href="book.css">
+    <script>
+      const __versoSiteRoot = document.baseURI;</script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
+    <script src="-verso-data/katex/katex.js"></script>
+    <script src="-verso-data/katex/math.js"></script>
+    <script src="-verso-data/popper.js"></script>
+    <script src="-verso-data/tippy.js"></script>
+    <link rel="stylesheet" href="static/theme.css">
+    <link rel="stylesheet" href="static/fonts/source-serif/source-serif-text.css">
+    <link rel="stylesheet" href="static/fonts/source-code-pro/source-code-pro.css">
+    <link rel="stylesheet" href="static/fonts/source-sans/source-sans-3.css">
+    <link rel="stylesheet" href="static/fonts/noto-sans-mono/noto-sans-mono.css">
+    <link rel="stylesheet" href="-verso-data/katex/katex.css">
+    <link rel="stylesheet" href="-verso-data/tippy-border.css">
+    <style>
+div.paragraph > .eval-steps:not(:first-child), div.paragraph > .eval-steps:not(:first-child) > * {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .eval-steps:not(:last-child), div.paragraph > .eval-steps:not(:last-child) > * {
+  margin-bottom: 0.5rem;
+}
+
+.eval-steps .hl.lean.block {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+</style><style>
+.shell-command {
+
+}
+.shell-command.inline > * {
+  display: inline;
+  white-space: pre;
+}
+.shell-command.inline .command::before {
+  content: "$ ";
+  font-weight: 600;
+}
+</style><style>
+.shell-command {
+
+}
+.shell-command.block > * {
+  display: block;
+  white-space: pre;
+}
+.shell-command .command .prompt {
+  font-weight: 600;
+}
+
+div.paragraph > .shell-command:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .shell-command:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style><style>
+
+.hl.lean {
+  white-space: pre;
+  font-weight: normal;
+  font-style: normal;
+}
+
+.hl.lean .keyword {
+  font-weight : bold;
+}
+
+.hl.lean .var {
+  font-style: italic;
+  position: relative;
+}
+
+.hover-container {
+  width: 0;
+  height: 0;
+  position: relative;
+  display: inline;
+}
+
+.hl.lean a {
+  color: inherit;
+  text-decoration: currentcolor underline dotted;
+}
+
+.hl.lean a:hover {
+  text-decoration: currentcolor underline solid;
+}
+
+.hl.lean .hover-info {
+  white-space: normal;
+}
+
+.hl.lean .token .hover-info {
+  display: none;
+  position: absolute;
+  background-color: #e5e5e5;
+  border: 1px solid black;
+  padding: 0.5rem;
+  z-index: 300;
+  font-size: inherit;
+}
+
+.hl.lean .hover-info.messages {
+  max-height: 10rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  padding: 0 0.5rem 0 0;
+  display: block;
+}
+
+.hl.lean .hover-info code {
+  white-space: pre-wrap;
+}
+
+.hl.lean .hover-info.messages > code {
+  padding: 0.5rem;
+  display: block;
+  width: fit-content;
+}
+
+.hl.lean .hover-info.messages > code:only-child {
+  margin: 0;
+}
+
+.hl.lean .hover-info.messages > code {
+  margin: 0.1rem;
+}
+
+.hl.lean .hover-info.messages > code:not(:first-child) {
+  margin-top: 0rem;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .has-info:hover > .hover-container > .hover-info:not(.tactic *),
+  .hl.lean .tactic:has(> .tactic-toggle:checked) .has-info:hover > .hover-container > .hover-info,
+  .hl.lean .token:hover > .hover-container > .hover-info:not(.has-info *):not(.tactic *),
+  .hl.lean .tactic:has(> .tactic-toggle:checked) .token:hover > .hover-container > .hover-info:not(.has-info *) {
+    display: inline-block;
+    position: absolute;
+    top: 1rem;
+    font-weight: normal;
+    font-style: normal;
+    width: min-content;
+  }
+}
+*/
+
+.hl.lean.block {
+  display: block;
+}
+
+.hl.lean.inline {
+  display: inline;
+  white-space: pre-wrap;
+}
+
+.hl.lean .token {
+  transition: all 0.25s; /* Slight fade for highlights */
+}
+
+@media (hover: hover) {
+  .hl.lean .token.binding-hl, .hl.lean .literal.string:hover, .hl.lean .token.typed:hover {
+    background-color: #eee;
+    border-radius: 2px;
+    transition: none;
+  }
+}
+
+
+.hl.lean .has-info .token:not(.tactic-state):not(.tactic-state *), .hl.lean .has-info .inter-text:not(.tactic-state):not(.tactic-state *) {
+  text-decoration-style: wavy;
+  text-decoration-line: underline;
+  text-decoration-thickness: from-font;
+}
+
+.hl.lean .has-info .hover-info {
+  display: none;
+  position: absolute;
+  transform: translate(0.25rem, 0.3rem);
+  border: 1px solid black;
+  padding: 0.5rem;
+  z-index: 400;
+  text-align: left;
+}
+
+.hl.lean .has-info.error :not(.tactic-state):not(.tactic-state *){
+  text-decoration-color: red;
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.error:hover {
+    background-color: #ffb3b3;
+  }
+}
+
+.hl.lean .hover-info.messages > code.error {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid #ffb3b3;
+}
+
+.tippy-box[data-theme~='error'] .hl.lean .hover-info.messages > code.error {
+  background: none;
+  border: none;
+}
+
+.error pre {
+    color: red;
+}
+
+.hl.lean .has-info.warning :not(.tactic-state):not(.tactic-state *) {
+  text-decoration-color: var(--verso-warning-color);
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.warning:hover {
+    background-color:var(--verso-warning-color);
+  }
+}
+
+.hl.lean .hover-info.messages > code.warning {
+  background-color: var(--verso-warning-color);
+}
+
+.hl.lean .hover-info.messages > code.error {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid var(--verso-warning-color);
+}
+
+.tippy-box[data-theme~='warning'] .hl.lean .hover-info.messages > code.warning {
+  background: none;
+  border: none;
+}
+
+
+.hl.lean .has-info.info :not(.tactic-state):not(.tactic-state *) {
+  text-decoration-color: blue;
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.info:hover {
+    background-color: #4777ff;
+  }
+}
+
+
+.hl.lean .hover-info.messages > code.info {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid #4777ff;
+}
+
+.tippy-box[data-theme~='info'] .hl.lean .hover-info.messages > code.info {
+  background: none;
+  border: none;
+}
+
+.hl.lean div.docstring {
+  font-family: sans-serif;
+  white-space: normal;
+  max-width: 40rem;
+  width: max-content;
+}
+
+.hl.lean div.docstring > :last-child {
+  margin-bottom: 0;
+}
+
+.hl.lean div.docstring > :first-child {
+  margin-top: 0;
+}
+
+.hl.lean .hover-info .sep {
+  display: block;
+  width: auto;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding: 0;
+  height: 1px;
+  border-top: 1px solid #ccc;
+}
+
+.hl.lean code {
+  font-family: monospace;
+}
+
+.hl.lean .tactic-state {
+  display: none;
+  position: relative;
+  left: 2rem;
+  width: fit-content;
+  border: 1px solid #888888;
+  border-radius: 0.1rem;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  background-color: #ffffff;
+  z-index: 200;
+}
+
+.hl.lean.popup .tactic-state {
+  position: static;
+  display: block;
+  width: auto;
+  border: none;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  background-color: #ffffff;
+}
+
+
+.hl.lean .tactic {
+  position: relative;
+}
+
+.hl.lean .tactic-toggle:checked ~ .tactic-state {
+  display: block;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .tactic:hover > .tactic-toggle:not(:checked) ~ .tactic-state {
+    display: block;
+    position: absolute;
+    left: 0;
+    transform: translate(0.25rem, 0);
+    z-index: 250;
+  }
+}
+*/
+
+.hl.lean .tactic > label {
+  position: relative;
+  transition: all 0.5s;
+}
+
+@media (hover: hover) {
+  .hl.lean .tactic > label:hover {
+    border-bottom: 1px dotted #bbbbbb;
+  }
+}
+
+.hl.lean .tactic-toggle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  z-index: -10;
+}
+
+.hl.lean .tactic > label::after {
+  content: "";
+  border: 1px solid #bbbbbb;
+  border-radius: 1rem;
+  height: 0.25rem;
+  vertical-align: middle;
+  width: 0.6rem;
+  margin-left: 0.1rem;
+  margin-right: 0.1rem;
+  display: inline-block;
+  transition: all 0.5s;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .tactic > label:hover::after {
+    border: 1px solid #aaaaaa;
+    background-color: #aaaaaa;
+    transition: all 0.5s;
+  }
+}
+*/
+
+.hl.lean .tactic > label:has(+ .tactic-toggle:checked)::after {
+  border: 1px solid #999999;
+  background-color: #999999;
+  transition: all 0.5s;
+}
+
+.hl.lean .tactic-state .goal + .goal {
+  margin-top: 1.5rem;
+}
+
+.hl.lean .tactic-state summary {
+  margin-left: -0.5rem;
+}
+
+.hl.lean .tactic-state details {
+  padding-left: 0.5rem;
+}
+
+.hl.lean .case-label {
+  display: block;
+  position: relative;
+}
+
+.hl.lean .case-label input[type="checkbox"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  z-index: -10;
+}
+
+.hl.lean .case-label:has(input[type="checkbox"])::before {
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+  background-color: black;
+  content: ' ';
+  transition: ease 0.2s;
+  margin-right: 0.7rem;
+  clip-path: polygon(100% 0, 0 0, 50% 100%);
+  width: 0.6rem;
+  height: 0.6rem;
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]:not(:checked))::before {
+  transform: rotate(-90deg);
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]) {
+
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]:checked) {
+
+}
+
+
+.hl.lean .tactic-state .labeled-case > :not(:first-child) {
+  max-height: 0px;
+  display: block;
+  overflow: hidden;
+  transition: max-height 0.1s ease-in;
+  margin-left: 0.5rem;
+  margin-top: 0.1rem;
+}
+
+.hl.lean .labeled-case:has(.case-label input[type="checkbox"]:checked) > :not(:first-child) {
+  max-height: 100%;
+}
+
+
+.hl.lean .tactic-state .goal-name::before {
+  font-style: normal;
+  content: "case ";
+}
+
+.hl.lean .tactic-state .goal-name {
+  font-style: italic;
+  font-family: monospace;
+}
+
+.hl.lean .tactic-state .hypotheses {
+  display: table;
+}
+
+.hl.lean .tactic-state .hypothesis {
+  display: table-row;
+}
+
+.hl.lean .tactic-state .hypothesis > * {
+  display: table-cell;
+}
+
+
+.hl.lean .tactic-state .hypotheses .colon {
+  text-align: center;
+  min-width: 1rem;
+}
+
+.hl.lean .tactic-state .hypotheses .name {
+  text-align: right;
+}
+
+.hl.lean .tactic-state .hypotheses .name,
+.hl.lean .tactic-state .hypotheses .type,
+.hl.lean .tactic-state .conclusion .type {
+  font-family: monospace;
+}
+
+.tippy-box[data-theme~='lean'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 1px solid black;
+}
+.tippy-box[data-theme~='lean'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: #e5e5e5;
+}
+
+.tippy-box[data-theme~='message'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #e5e5e5;
+  border-width: 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='top'] > .tippy-arrow::after {
+  bottom: -11px;
+  border-width: 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-width: 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='bottom'] > .tippy-arrow::after {
+  top: -11px;
+  border-width: 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: #e5e5e5;
+  border-width: 11px 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='left'] > .tippy-arrow::after {
+  right: -11px;
+  border-width: 11px 0 11px 11px;
+}
+
+.tippy-box[data-theme~='message'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: #e5e5e5;
+  border-width: 11px 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='right'] > .tippy-arrow::after {
+  left: -11px;
+  border-width: 11px 11px 11px 0;
+}
+
+
+
+.tippy-box[data-theme~='warning'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid var(--verso-warning-color);
+}
+
+.tippy-box[data-theme~='error'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid #f7a7af;
+}
+
+.tippy-box[data-theme~='info'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid #99b3c2;
+}
+
+.tippy-box[data-theme~='tactic'] {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: white;
+}
+
+</style><style>
+.example-file {
+  white-space: normal;
+  font-family: var(--verso-structure-font-family);
+  margin: 1rem;
+  width: fit-content;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+
+  /* These are necessary for the container to behave nicely on mobile */
+  overflow-x: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.example-file::before {
+  counter-reset: linenumber;
+}
+.example-file > .line {
+  display: block;
+  white-space: pre;
+  counter-increment: linenumber;
+  font-family: var(--verso-code-font-family);
+}
+.example-file > .line::before {
+  -webkit-user-select: none;
+  display: inline-block;
+  content: counter(linenumber);
+  border-right: 1px solid #ddd;
+  width: 2em;
+  padding-right: 0.25em;
+  margin-right: 0.25em;
+  font-family: var(--verso-code-font-family);
+  text-align: right;
+}
+.example-file > .line::after {
+  -webkit-user-select: none;
+  display: inline-block;
+  content: "⏎";
+  opacity: 0;
+}
+.example-file > .line:hover::after {
+  opacity: 1;
+}
+.example-file > .line:hover, .example-file > .line:hover::before {
+  background-color: #eee;
+}
+.example-file > .empty {
+  display: block;
+  white-space: pre;
+  font-family: var(--verso-code-font-family);
+  font-style: italic;
+}
+.example-file > .empty::before {
+  -webkit-user-select: none;
+  display: inline-block;
+  content: "";
+  border-right: 1px solid #ddd;
+  width: 2em;
+  padding-right: 0.25em;
+  margin-right: 0.25em;
+  font-family: var(--verso-code-font-family);
+  text-align: right;
+}
+</style><style>
+table.tabular {
+  margin: auto;
+  border-spacing: 1rem;
+}
+table.tabular.left-align {
+  margin-right: auto;
+  margin-left: 0;
+}
+table.tabular.center-align {
+  margin: auto;
+}
+table.tabular.right-align {
+  margin-left auto;
+  margin-right: 0;
+}
+table.tabular td, table.tabular th {
+  text-align: left;
+  vertical-align: top;
+}
+table.tabular td > p:first-child, table.tabular th > p:first-child {
+  margin-top: 0;
+}
+table.tabular td > p:last-child, table.tabular th > p:first-child {
+  margin-bottom: 0;
+}
+</style><style>
+.shell-commands {
+
+}
+.shell-commands > * {
+  display: block;
+  white-space: pre;
+}
+.shell-commands .command::before {
+  content: "$ ";
+  font-weight: 600;
+}
+
+div.paragraph > .shell-commands:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .shell-commands:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style><style>
+.eq-steps .hl.lean.block {
+  background-color: #f6f7f6;
+  padding: 1rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+.eq-steps .reason {
+  font-style: italic;
+  margin-left: 2.5em;
+  display: flex;
+}
+.eq-steps .reason::before {
+  content: "={";
+  font-family: var(--verso-code-font-family);
+  font-style: normal;
+  font-weight: 600;
+  margin-right: 0.5em;
+  align-self: center;
+}
+.eq-steps .reason > p {
+  margin: 0;
+  max-width: 25em;
+  align-self: center;
+}
+.eq-steps .reason::after {
+  content: "}=";
+  font-family: var(--verso-code-font-family);
+  font-style: normal;
+  font-weight: 600;
+  margin-left: 1em;
+  align-self: center;
+}
+</style><style>
+div.paragraph > .eq-steps:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .eq-steps:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style><script>
+      
+window.onload = () => {
+
+    // Don't show hovers inside of closed tactic states
+    function blockedByTactic(elem) {
+      let parent = elem.parentNode;
+      while (parent && "classList" in parent) {
+        if (parent.classList.contains("tactic")) {
+          const toggle = parent.querySelector("input.tactic-toggle");
+          if (toggle) {
+            return !toggle.checked;
+          }
+        }
+        parent = parent.parentNode;
+      }
+      return false;
+    }
+
+    function blockedByTippy(elem) {
+      // Don't show a new hover until the old ones are all closed.
+      // Scoped to the nearest "top-level block" to avoid being O(n) in the size of the document.
+      var block = elem;
+      const topLevel = new Set(["section", "body", "html", "nav", "header"]);
+      while (block.parentNode && !topLevel.has(block.parentNode.nodeName.toLowerCase())) {
+        block = block.parentNode;
+      }
+      for (const child of block.querySelectorAll(".token, .has-info")) {
+        if (child._tippy && child._tippy.state.isVisible) { return true };
+      }
+      return false;
+    }
+
+    for (const c of document.querySelectorAll(".hl.lean .token")) {
+        if (c.dataset.binding != "") {
+            c.addEventListener("mouseover", (event) => {
+                if (blockedByTactic(c)) {return;}
+                const context = c.closest(".hl.lean").dataset.leanContext;
+                for (const example of document.querySelectorAll(".hl.lean")) {
+                    if (example.dataset.leanContext == context) {
+                        for (const tok of example.querySelectorAll(".token")) {
+                            if (c.dataset.binding == tok.dataset.binding) {
+                                tok.classList.add("binding-hl");
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        c.addEventListener("mouseout", (event) => {
+            for (const tok of document.querySelectorAll(".hl.lean .token")) {
+                tok.classList.remove("binding-hl");
+            }
+        });
+    }
+    /* Render docstrings */
+    if ('undefined' !== typeof marked) {
+        for (const d of document.querySelectorAll("code.docstring, pre.docstring")) {
+            const str = d.innerText;
+            const html = marked.parse(str);
+            const rendered = document.createElement("div");
+            rendered.classList.add("docstring");
+            rendered.innerHTML = html;
+            d.parentNode.replaceChild(rendered, d);
+        }
+    }
+    // Add hovers
+    let siteRoot = typeof __versoSiteRoot !== 'undefined' ? __versoSiteRoot : "/";
+    let docsJson = siteRoot + "-verso-docs.json";
+    fetch(docsJson).then((resp) => resp.json()).then((versoDocData) => {
+
+      function hideParentTooltips(element) {
+        let parent = element.parentElement;
+        while (parent) {
+          const tippyInstance = parent._tippy;
+          if (tippyInstance) {
+            tippyInstance.hide();
+          }
+          parent = parent.parentElement;
+        }
+      }
+
+
+
+      const defaultTippyProps = {
+        /* DEBUG -- remove the space: * /
+        onHide(any) { return false; },
+        trigger: "click",
+        // */
+        /* theme: "lean", */
+        maxWidth: "none",
+        appendTo: () => document.body,
+        interactive: true,
+        delay: [100, null],
+        /* ignoreAttributes: true, */
+        followCursor: 'initial',
+        onShow(inst) {
+          if (inst.reference.className == 'tactic') {
+
+            const toggle = inst.reference.querySelector("input.tactic-toggle");
+            if (toggle && toggle.checked) {
+              return false;
+            }
+            hideParentTooltips(inst.reference);
+            //if (blockedByTippy(inst.reference)) { return false; }
+
+          } else if (inst.reference.querySelector(".hover-info") || "versoHover" in inst.reference.dataset) {
+            if (blockedByTactic(inst.reference)) { return false };
+            if (blockedByTippy(inst.reference)) { return false; }
+          } else { // Nothing to show here!
+            return false;
+          }
+        },
+        content (tgt) {
+          const content = document.createElement("span");
+          if (tgt.className == 'tactic') {
+            const state = tgt.querySelector(".tactic-state").cloneNode(true);
+            state.style.display = "block";
+            content.appendChild(state);
+            content.style.display = "block";
+            content.className = "hl lean popup";
+          } else {
+            content.className = "hl lean";
+            content.style.display = "block";
+            content.style.maxHeight = "300px";
+            content.style.overflowY = "auto";
+            content.style.overflowX = "hidden";
+            const hoverId = tgt.dataset.versoHover;
+            const hoverInfo = tgt.querySelector(".hover-info");
+            if (hoverId) { // Docstrings from the table
+              // TODO stop doing an implicit conversion from string to number here
+              let data = versoDocData[hoverId];
+              if (data) {
+                const info = document.createElement("span");
+                info.className = "hover-info";
+                info.style.display = "block";
+                info.innerHTML = data;
+                content.appendChild(info);
+                /* Render docstrings - TODO server-side */
+                if ('undefined' !== typeof marked) {
+                    for (const d of content.querySelectorAll("code.docstring, pre.docstring")) {
+                        const str = d.innerText;
+                        const html = marked.parse(str);
+                        const rendered = document.createElement("div");
+                        rendered.classList.add("docstring");
+                        rendered.innerHTML = html;
+                        d.parentNode.replaceChild(rendered, d);
+                    }
+                }
+              } else {
+                content.innerHTML = "Failed to load doc ID: " + hoverId;
+              }
+            } else if (hoverInfo) { // The inline info, still used for compiler messages
+              content.appendChild(hoverInfo.cloneNode(true));
+            }
+          }
+          return content;
+        }
+      };
+
+
+
+      const addTippy = (selector, props) => {
+        tippy(selector, Object.assign({}, defaultTippyProps, props));
+      };
+      document.querySelectorAll('.hl.lean .const.token, .hl.lean .keyword.token, .hl.lean .literal.token, .hl.lean .option.token, .hl.lean .var.token, .hl.lean .typed.token').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'lean');
+      });
+      document.querySelectorAll('.hl.lean .has-info.warning').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'warning message');
+      });
+      document.querySelectorAll('.hl.lean .has-info.info').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'info message');
+      });
+      document.querySelectorAll('.hl.lean .has-info.error').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'error message');
+      });
+      document.querySelectorAll('.hl.lean .tactic').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'tactic');
+      });
+      let insts = tippy('.hl.lean .const.token, .hl.lean .keyword.token, .hl.lean .literal.token, .hl.lean .option.token, .hl.lean .var.token, .hl.lean .typed.token, .hl.lean .has-info, .hl.lean .tactic', defaultTippyProps);
+
+
+
+      /*
+      tippy('.hl.lean .tactic', {
+        allowHtml: true,
+
+        onHide(any) { return false; },
+        trigger: "click",
+
+        maxWidth: "none",
+        onShow(inst) {
+          const toggle = inst.reference.querySelector("input.tactic-toggle");
+          if (toggle && toggle.checked) {
+            return false;
+          }
+          if (blockedByTippy(inst.reference)) { return false; }
+        },
+        content (tgt) {
+          const content = document.createElement("span");
+          const state = tgt.querySelector(".tactic-state").cloneNode(true);
+          state.style.display = "block";
+          content.appendChild(state);
+          content.style.display = "block";
+          content.className = "hl lean popup";
+          return content;
+        }
+      });
+      */
+  });
+}
+</script>
+    </head>
+  <body>
+    <header>
+      <div class="header-logo-wrapper">
+        <a href="" id="logo"><img src="static/lean_logo.svg"></a></div>
+      <div class="header-title-wrapper">
+        <a href="" class="header-title"><h1>
+            Functional Programming in Lean</h1>
+          </a></div>
+      </header>
+    <label for="toggle-toc" id="toggle-toc-click"><span class="line line1"></span><span class="line line2"></span><span class="line line3"></span></label><div class="with-toc">
+      <div class="toc-backdrop" onclick="document.getElementById('toggle-toc-click')?.click()"></div>
+      <nav id="toc">
+        <input type="checkbox" id="toggle-toc"><div class="first">
+          <a href="" class="toc-title"><h1>
+              Functional Programming in Lean</h1>
+            </a><div class="split-tocs">
+            <div class="split-toc book">
+              <div class="title">
+                <label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot"></label><span class="">Table of Contents</span></div>
+              <table><tr class="unnumbered"><td class="num"><td><a href="Introduction/#Functional-Programming-in-Lean--Introduction">Introduction</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Acknowledgments/#Functional-Programming-in-Lean--Acknowledgments">Acknowledgments</a></td></tr><tr class="numbered"><td class="num">1.</td><td><a href="Getting-to-Know-Lean/#getting-to-know">Getting to Know Lean</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Hello___-World___/#hello-world">Hello, World!</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Propositions___-Proofs___-and-Indexing/#props-proofs-indexing">Interlude: Propositions, Proofs, and Indexing</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="Overloading-and-Type-Classes/#Functional-Programming-in-Lean--Overloading-and-Type-Classes">Overloading and Type Classes</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="Monads/#Functional-Programming-in-Lean--Monads">Monads</a></td></tr><tr class="current numbered"><td class="num">5.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads">Functors, Applicative Functors, and Monads</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Monad-Transformers/#Functional-Programming-in-Lean--Monad-Transformers">Monad Transformers</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Programming-with-Dependent-Types/#Functional-Programming-in-Lean--Programming-with-Dependent-Types">Programming with Dependent Types</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Tactics___-Induction___-and-Proofs/#Functional-Programming-in-Lean--Interlude___-Tactics___-Induction___-and-Proofs">Interlude: Tactics, Induction, and Proofs</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Programming___-Proving___-and-Performance/#Functional-Programming-in-Lean--Programming___-Proving___-and-Performance">Programming, Proving, and Performance</a></td></tr><tr class="numbered"><td class="num">9.</td><td><a href="Next-Steps/#next-steps">Next Steps</a></td></tr></table></div>
+            <div class="split-toc">
+              <div class="title">
+                <label for="--verso-manual-toc-Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads" checked="checked"></label><span class="number">5.</span> <span class=""><a href="Functors___-Applicative-Functors___-and-Monads/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads">Functors, Applicative Functors, and Monads</a></span></div>
+              <table><tr class="numbered"><td class="num">5.1.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/Structures-and-Inheritance/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Structures-and-Inheritance">Structures and Inheritance</a></td></tr><tr class="current numbered"><td class="num">5.2.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/Applicative-Functors/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Applicative-Functors">Applicative Functors</a></td></tr><tr class="numbered"><td class="num">5.3.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/The-Applicative-Contract/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--The-Applicative-Contract">The Applicative Contract</a></td></tr><tr class="numbered"><td class="num">5.4.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/Alternatives/#alternative">Alternatives</a></td></tr><tr class="numbered"><td class="num">5.5.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/Universes/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Universes">Universes</a></td></tr><tr class="numbered"><td class="num">5.6.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/The-Complete-Definitions/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--The-Complete-Definitions">The Complete Definitions</a></td></tr><tr class="numbered"><td class="num">5.7.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/Summary/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Summary">Summary</a></td></tr></table></div>
+            <div class="split-toc">
+              <div class="title">
+                <label for="--verso-manual-toc-Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Applicative-Functors" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Applicative-Functors" checked="checked"></label><span class="number">5.2.</span> <span class="current"><a href="Functors___-Applicative-Functors___-and-Monads/Applicative-Functors/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Applicative-Functors">Applicative Functors</a></span></div>
+              <table><tr class="numbered"><td class="num">5.2.1.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/Applicative-Functors/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Applicative-Functors--A-Non-Monadic-Applicative">A Non-Monadic Applicative</a></td></tr></table></div>
+            </div>
+          </div>
+        <div class="last">
+          <ul id="meta-links">
+            <li>
+              <a href="https://github.com/leanprover/fp-lean">Source Code</a></li>
+            <li>
+              <a href="https://github.com/leanprover/fp-lean/issues">Report Issues</a></li>
+            </ul>
+          </div>
+        </nav>
+      <main><div class="content-wrapper">
+          <nav class="prev-next-buttons">
+            <a class="local-button active" href="Functors___-Applicative-Functors___-and-Monads/Structures-and-Inheritance/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Structures-and-Inheritance" rel="prev" title="5.1. Structures and Inheritance"><span class="arrow">←</span><span class="where">5.1. Structures and Inheritance</span></a><a class="local-button active" href="Functors___-Applicative-Functors___-and-Monads/The-Applicative-Contract/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--The-Applicative-Contract" rel="next" title="5.3. The Applicative Contract"><span class="where">5.3. The Applicative Contract</span><span class="arrow">→</span></a></nav>
+          <section>
+            <h1>
+              5.2. Applicative Functors</h1>
+            <p>
+              An <em>applicative functor</em> is a functor that has two additional operations available: <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pure.pure" data-verso-hover="814">pure</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Seq.seq" data-verso-hover="1046">seq</span></code>.
+<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pure.pure" data-verso-hover="814">pure</span></code> is the same operator used in <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monad" data-verso-hover="724">Monad</span></code>, because <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monad" data-verso-hover="724">Monad</span></code> in fact inherits from <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span></code>.
+<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Seq.seq" data-verso-hover="1046">seq</span></code> is much like <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Functor.map" data-verso-hover="567">map</span></code>: it allows a function to be used in order to transform the contents of a datatype.
+However, with <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Seq.seq" data-verso-hover="1046">seq</span></code>, the function is itself contained in the datatype: <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.7794" data-verso-hover="581">f</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.7814" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7816" data-verso-hover="113">β</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Unit" data-verso-hover="184">Unit</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7794" data-verso-hover="581">f</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7814" data-verso-hover="113">α</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7794" data-verso-hover="581">f</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7816" data-verso-hover="113">β</span></code>.
+Having the function under the type <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.7794" data-verso-hover="581">f</span></code> allows the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span></code> instance to control how the function is applied, while <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Functor.map" data-verso-hover="567">Functor.map</span></code> unconditionally applies a function.
+The second argument has a type that begins with <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Unit" data-verso-hover="184">Unit</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span></code> to allow the definition of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Seq.seq" data-verso-hover="1046">seq</span></code> to short-circuit in cases where the function will never be applied.</p>
+            <p>
+              The value of this short-circuiting behavior can be seen in the instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option" data-verso-hover="142">Option</span></code>:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-6265">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option" data-verso-hover="142">Option</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-6295">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Pure.pure" data-verso-hover="814">pure</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8017" data-verso-hover="584">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option.some" data-verso-hover="146">.some</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8017" data-verso-hover="584">x</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Seq.seq" data-verso-hover="1046">seq</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8037" data-verso-hover="1047">f</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8040" data-verso-hover="1048">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-6338" data-verso-hover="100">match</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8037" data-verso-hover="1047">f</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-6338" data-verso-hover="100">with</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option.none" data-verso-hover="145">none</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option.none" data-verso-hover="145">none</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option.some" data-verso-hover="146">some</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8080" data-verso-hover="572">g</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8080" data-verso-hover="572">g</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;$&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8040" data-verso-hover="1048">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">)</span></code><p>
+              In this case, if there is no function for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Seq.seq" data-verso-hover="1046">seq</span></code> to apply, then there is no need to compute its argument, so <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.8017" data-verso-hover="584">x</span></code> is never called.
+The same consideration informs the instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span></code> for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Except" data-verso-hover="745">Except</span></code>:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-6460">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Except" data-verso-hover="745">Except</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8256" data-verso-hover="369">ε</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-6495">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Pure.pure" data-verso-hover="818">pure</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8318" data-verso-hover="584">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Except.ok" data-verso-hover="747">.ok</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8318" data-verso-hover="584">x</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Seq.seq" data-verso-hover="1049">seq</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8341" data-verso-hover="1050">f</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8344" data-verso-hover="1051">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-6536" data-verso-hover="100">match</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8341" data-verso-hover="1050">f</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-6536" data-verso-hover="100">with</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Except.error" data-verso-hover="746">.error</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8364" data-verso-hover="766">e</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Except.error" data-verso-hover="746">.error</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8364" data-verso-hover="766">e</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Except.ok" data-verso-hover="747">.ok</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8389" data-verso-hover="572">g</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8389" data-verso-hover="572">g</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;$&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.8344" data-verso-hover="1051">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">)</span></code><p>
+              This short-circuiting behavior depends only on the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Option" data-verso-hover="142">Option</span></code> or <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Except" data-verso-hover="745">Except</span></code> structures that <em>surround</em> the function, rather than on the function itself.</p>
+            <p>
+              Monads can be seen as a way of capturing the notion of sequentially executing statements into a pure functional language.
+The result of one statement can affect which further statements run.
+This can be seen in the type of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Bind.bind" data-verso-hover="864">bind</span></code>: <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.7798" data-verso-hover="581">m</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7814" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.7814" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7798" data-verso-hover="581">m</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7816" data-verso-hover="113">β</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7798" data-verso-hover="581">m</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7816" data-verso-hover="113">β</span></code>.
+The first statement's resulting value is an input into a function that computes the next statement to execute.
+Successive uses of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Bind.bind" data-verso-hover="864">bind</span></code> are like a sequence of statements in an imperative programming language, and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Bind.bind" data-verso-hover="864">bind</span></code> is powerful enough to implement control structures like conditionals and loops.</p>
+            <p>
+              Following this analogy, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span></code> captures function application in a language that has side effects.
+The arguments to a function in languages like Kotlin or C# are evaluated from left to right.
+Side effects performed by earlier arguments occur before those performed by later arguments.
+A function is not powerful enough to implement custom short-circuiting operators that depend on the specific <em>value</em> of an argument, however.</p>
+            <p>
+              Typically, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ApplicativeToFunctor.Applicative.seq" data-verso-hover="1052">seq</span></code> is not invoked directly.
+Instead, the operator <code>&lt;*&gt;</code> is used.
+This operator wraps its second argument in <code>fun () =&gt; ...</code>, simplifying the call site.
+In other words, <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.7821" data-verso-hover="1053">E1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;*&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7823" data-verso-hover="1054">E2</span></code> is syntactic sugar for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Seq.seq" data-verso-hover="1055">Seq.seq</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7821" data-verso-hover="1053">E1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.fun-6027">fun</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.7823" data-verso-hover="1054">E2</span><span class="unknown token" data-binding="">)</span></code>.</p>
+            <p>
+              The key feature that allows <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ApplicativeToFunctor.Applicative.seq" data-verso-hover="1052">seq</span></code> to be used with multiple arguments is that a multiple-argument Lean function is really a single-argument function that returns another function that's waiting for the rest of the arguments.
+In other words, if the first argument to <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ApplicativeToFunctor.Applicative.seq" data-verso-hover="1052">seq</span></code> is awaiting multiple arguments, then the result of the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ApplicativeToFunctor.Applicative.seq" data-verso-hover="1052">seq</span></code> will be awaiting the rest.
+For example, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Option.some" data-verso-hover="146">some</span><span class="inter-text"> </span><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">Plus.plus</span></code> can have the type <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Option" data-verso-hover="142">Option</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="unknown token" data-binding="">)</span></code>.
+Providing one argument, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Option.some" data-verso-hover="146">some</span><span class="inter-text"> </span><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">Plus.plus</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;*&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option.some" data-verso-hover="146">some</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">4</span></code>, results in the type <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Option" data-verso-hover="142">Option</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="unknown token" data-binding="">)</span></code>.
+This can itself be used with <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ApplicativeToFunctor.Applicative.seq" data-verso-hover="1052">seq</span></code>, so <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Option.some" data-verso-hover="146">some</span><span class="inter-text"> </span><span class="const token" data-binding="const-Plus.plus" data-verso-hover="392">Plus.plus</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;*&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option.some" data-verso-hover="146">some</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">4</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;*&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option.some" data-verso-hover="146">some</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">7</span></code> has the type <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Option" data-verso-hover="142">Option</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code>.</p>
+            <p>
+              Not every functor is applicative.
+<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pair" data-verso-hover="1056">Pair</span></code> is like the built-in product type <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Prod" data-verso-hover="154">Prod</span></code>:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.structureTk-7634">structure</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair" data-verso-hover="1056">Pair</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.9771" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.9773" data-verso-hover="113">β</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-7671">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Pair.first" data-verso-hover="1057">first</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.9771" data-verso-hover="113">α</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Pair.second" data-verso-hover="1058">second</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.9773" data-verso-hover="113">β</span></code><p>
+              Like <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Except" data-verso-hover="745">Except</span></code>, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pair" data-verso-hover="1056">Pair</span></code> has type <code class="hl lean inline" data-lean-context="examples"><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span></code>.
+This means that <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pair" data-verso-hover="1056">Pair</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10227" data-verso-hover="113">α</span></code> has type <code class="hl lean inline" data-lean-context="examples"><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span></code>, and a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Functor" data-verso-hover="570">Functor</span></code> instance is possible:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-7835">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Functor" data-verso-hover="570">Functor</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Pair" data-verso-hover="1056">Pair</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10227" data-verso-hover="113">α</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-7864">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Functor.map" data-verso-hover="1059">map</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10248" data-verso-hover="572">f</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10252" data-verso-hover="1060">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="unknown token" data-binding="const-Pair.mk" data-verso-hover="1061">⟨</span><span class="var token" data-binding="var-_uniq.10252" data-verso-hover="1060">x</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-Pair.first" data-verso-hover="1057">first</span><span class="unknown token" data-binding="const-Pair.mk" data-verso-hover="1061">,</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10248" data-verso-hover="572">f</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10252" data-verso-hover="1060">x</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-Pair.second" data-verso-hover="1058">second</span><span class="unknown token" data-binding="const-Pair.mk" data-verso-hover="1061">⟩</span></code><p>
+              This instance obeys the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Functor" data-verso-hover="570">Functor</span></code> contract.</p>
+            <p>
+              The two properties to check are that <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-id" data-verso-hover="585">id</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;$&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span></code><code> = </code><code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span></code> and that <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.10959" data-verso-hover="1062">f</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;$&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10963" data-verso-hover="587">g</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;$&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span></code><code> = </code><code class="hl lean inline" data-lean-context="examples"><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.10959" data-verso-hover="1062">f</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∘</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10963" data-verso-hover="587">g</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;$&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span></code>.
+The first property can be checked by just stepping through the evaluation of the left side, and noticing that it evaluates to the right side:</p>
+            <div class="eval-steps">
+              <code class="hl lean block" data-lean-context="examples"><span class="const token" data-binding="const-id" data-verso-hover="585">id</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;$&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span></code><code class="hl lean block" data-lean-context="examples"><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-id" data-verso-hover="585">id</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span><span class="unknown token" data-binding="">)</span></code><code class="hl lean block" data-lean-context="examples"><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span></code></div>
+            <p>
+              The second can be checked by stepping through both sides, and noting that they yield the same result:</p>
+            <div class="eval-steps">
+              <code class="hl lean block" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.10959" data-verso-hover="1062">f</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;$&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10963" data-verso-hover="587">g</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;$&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span></code><code class="hl lean block" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.10959" data-verso-hover="1062">f</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;$&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.10963" data-verso-hover="587">g</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span><span class="unknown token" data-binding="">)</span></code><code class="hl lean block" data-lean-context="examples"><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.10959" data-verso-hover="1062">f</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.10963" data-verso-hover="587">g</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span></code></div>
+            <div class="eval-steps">
+              <code class="hl lean block" data-lean-context="examples"><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.10959" data-verso-hover="1062">f</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∘</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10963" data-verso-hover="587">g</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;$&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span></code><code class="hl lean block" data-lean-context="examples"><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.10959" data-verso-hover="1062">f</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∘</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10963" data-verso-hover="587">g</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span><span class="unknown token" data-binding="">)</span></code><code class="hl lean block" data-lean-context="examples"><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10953" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.10959" data-verso-hover="1062">f</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.10963" data-verso-hover="587">g</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10955" data-verso-hover="190">y</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span></code></div>
+            <p>
+              Attempting to define an <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span></code> instance, however, does not work so well.
+It will require a definition of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pair.pure" data-verso-hover="1063">pure</span></code>:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-9244">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair.pure" data-verso-hover="1063">Pair.pure</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.11514" data-verso-hover="190">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.11506" data-verso-hover="113">β</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair" data-verso-hover="1056">Pair</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.11512" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.11506" data-verso-hover="113">β</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">don't know how to synthesize placeholder
+context:
+β α : Type
+x : β
+⊢ Pair α β</code></span></span><span class="unknown token" data-binding="">_</span></span></code><div class="error">
+              <pre>don't know how to synthesize placeholder
+context:
+β α : Type
+x : β
+⊢ Pair α β</pre></div>
+            <p>
+              There is a value with type <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.11533" data-verso-hover="113">β</span></code> in scope (namely <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.11541" data-verso-hover="190">x</span></code>), and the error message from the underscore suggests that the next step is to use the constructor <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span></code>:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-9475">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair.pure" data-verso-hover="1063">Pair.pure</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.11541" data-verso-hover="190">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.11533" data-verso-hover="113">β</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair" data-verso-hover="1056">Pair</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.11539" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.11533" data-verso-hover="113">β</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pair.mk" data-verso-hover="1061">Pair.mk</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">don't know how to synthesize placeholder for argument 'first'
+context:
+β α : Type
+x : β
+⊢ α</code></span></span><span class="unknown token" data-binding="">_</span></span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.11541" data-verso-hover="190">x</span></code><div class="error">
+              <pre>don't know how to synthesize placeholder for argument 'first'
+context:
+β α : Type
+x : β
+⊢ α</pre></div>
+            <p>
+              Unfortunately, there is no <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.11539" data-verso-hover="113">α</span></code> available.
+Because <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pair.pure" data-verso-hover="1063">pure</span></code> would need to work for <em>all possible types</em> <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.11539" data-verso-hover="113">α</span></code> to define an instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Pair" data-verso-hover="1056">Pair</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.10945" data-verso-hover="113">α</span><span class="unknown token" data-binding="">)</span></code>, this is impossible.
+After all, a caller could choose <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.11539" data-verso-hover="113">α</span></code> to be <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Empty" data-verso-hover="185">Empty</span></code>, which has no values at all.</p>
+            <section>
+              <h2 id="Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Applicative-Functors--A-Non-Monadic-Applicative">
+                5.2.1. A Non-Monadic Applicative</h2>
+              <p>
+                When validating user input to a form, it's generally considered to be best to provide many errors at once, rather than one error at a time.
+This allows the user to have an overview of what is needed to please the computer, rather than feeling badgered as they correct the errors field by field.</p>
+              <p>
+                Ideally, validating user input will be visible in the type of the function that's doing the validating.
+It should return a datatype that is specific—checking that a text box contains a number should return an actual numeric type, for instance.
+A validation routine could throw an exception when the input does not pass validation.
+Exceptions have a major drawback, however: they terminate the program at the first error, making it impossible to accumulate a list of errors.</p>
+              <p>
+                On the other hand, the common design pattern of accumulating a list of errors and then failing when it is non-empty is also problematic.
+A long nested sequences of <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">if</span></code> statements that validate each sub-section of the input data is hard to maintain, and it's easy to lose track of an error message or two.
+Ideally, validation can be performed using an API that enables a new value to be returned yet automatically tracks and accumulates error messages.</p>
+              <p>
+                An applicative functor called <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span></code> provides one way to implement this style of API.
+Like the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Except" data-verso-hover="745">Except</span></code> monad, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span></code> allows a new value to be constructed that characterizes the validated data accurately.
+Unlike <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Except" data-verso-hover="745">Except</span></code>, it allows multiple errors to be accumulated, without a risk of forgetting to check whether the list is empty.</p>
+              <section>
+                <h3 id="Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Applicative-Functors--A-Non-Monadic-Applicative--User-Input">
+                  5.2.1.1. User Input</h3>
+                <p>
+                  As an example of user input, take the following structure:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.structureTk-20983">structure</span><span class="inter-text"> </span><span class="const token" data-binding="const-RawInput" data-verso-hover="1065">RawInput</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-21002">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-RawInput.name" data-verso-hover="1066">name</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-RawInput.birthYear" data-verso-hover="1067">birthYear</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span></code><p>
+                  The business logic to be implemented is the following:</p>
+                <ol start="1">
+                  <li>
+                    <p>
+                      The name may not be empty</p>
+                    </li>
+                  <li>
+                    <p>
+                      The birth year must be numeric and non-negative</p>
+                    </li>
+                  <li>
+                    <p>
+                      The birth year must be greater than 1900, and less than or equal to the year in which the form is validated</p>
+                    </li>
+                  </ol>
+                <p>
+                  Representing these as a datatype will require a new feature, called <em>subtypes</em>.
+With this tool in hand, a validation framework can be written that uses an applicative functor to track errors, and these rules can be implemented in the framework.</p>
+                </section>
+              <section>
+                <h3 id="subtypes">
+                  5.2.1.2. Subtypes<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&name=subtypes" title="Permalink">🔗</a></span></h3>
+                <p>
+                  Representing these conditions is easiest with one additional Lean type, called <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SubtypeDemo.Subtype" data-verso-hover="1068">Subtype</span></code>:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.structureTk-21111">structure</span><span class="inter-text"> </span><span class="const token" data-binding="const-SubtypeDemo.Subtype" data-verso-hover="1068">Subtype</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.62227" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="unknown token" data-binding="">}</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.62231" data-verso-hover="1069">p</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.62227" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="3">Prop</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-21159">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-SubtypeDemo.Subtype.val" data-verso-hover="1070">val</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.62227" data-verso-hover="113">α</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-SubtypeDemo.Subtype.property" data-verso-hover="1071">property</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.62231" data-verso-hover="1069">p</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.62236" data-verso-hover="121">val</span></code><p>
+                  This structure has two type parameters: an implicit parameter that is the type of data <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.62227" data-verso-hover="113">α</span></code>, and an explicit parameter <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.62231" data-verso-hover="1069">p</span></code> that is a predicate over <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.62227" data-verso-hover="113">α</span></code>.
+A <em>predicate</em> is a logical statement with a variable in it that can be replaced with a value to yield an actual statement, like the <a href="Overloading-and-Type-Classes/Arrays-and-Indexing/#overloading-indexing">parameter to <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-GetElem" data-verso-hover="484">GetElem</span></code></a> that describes what it means for an index to be in bounds for a lookup.
+In the case of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SubtypeDemo.Subtype" data-verso-hover="1068">Subtype</span></code>, the predicate slices out some subset of the values of <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.62227" data-verso-hover="113">α</span></code> for which the predicate holds.
+The structure's two fields are, respectively, a value from <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.62227" data-verso-hover="113">α</span></code> and evidence that the value satisfies the predicate <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.62231" data-verso-hover="1069">p</span></code>.
+Lean has special syntax for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SubtypeDemo.Subtype" data-verso-hover="1068">Subtype</span></code>.
+If <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.62231" data-verso-hover="1069">p</span></code> has type <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.62227" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="3">Prop</span></code>, then the type <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SubtypeDemo.Subtype" data-verso-hover="1068">Subtype</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.62676" data-verso-hover="1069">p</span></code> can also be written <code class="hl lean inline" data-lean-context="examples"><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.62687" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.62672" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">//</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.62676" data-verso-hover="1069">p</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.62687" data-verso-hover="121">x</span><span class="unknown token" data-binding="">}</span></code>, or even <code class="hl lean inline" data-lean-context="examples"><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.62718" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">//</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.62676" data-verso-hover="1069">p</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.62718" data-verso-hover="121">x</span><span class="unknown token" data-binding="">}</span></code> when the type <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.62227" data-verso-hover="113">α</span></code> can be inferred automatically.</p>
+                <p>
+                  <a href="Overloading-and-Type-Classes/Positive-Numbers/#positive-numbers">Representing positive numbers as inductive types</a> is clear and easy to program with.
+However, it has a key disadvantage.
+While <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Int" data-verso-hover="28">Int</span></code> have the structure of ordinary inductive types from the perspective of Lean programs, the compiler treats them specially and uses fast arbitrary-precision number libraries to implement them.
+This is not the case for additional user-defined types.
+However, a subtype of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> that restricts it to non-zero numbers allows the new type to use the efficient representation while still ruling out zero at compile time:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-21588">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-FastPos.FastPos" data-verso-hover="1072">FastPos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.62737" data-verso-hover="5">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">//</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.62737" data-verso-hover="5">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&gt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">0</span><span class="unknown token" data-binding="">}</span></code><p>
+                  The smallest fast positive number is still one.
+Now, instead of being a constructor of an inductive type, it's an instance of a structure that's constructed with angle brackets.
+The first argument is the underlying <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code>, and the second argument is the evidence that said <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> is greater than zero:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-21669">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-FastPos.one" data-verso-hover="1073">one</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-FastPos.FastPos" data-verso-hover="1072">FastPos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">⟨</span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">,</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-11742539469030055260-21696-21698"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-21696" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-11742539469030055260-21696-21698"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="inter-text">1</span><span class="const token" data-binding="const-GT.gt" data-verso-hover="372"> &gt; </span><span class="inter-text">0</span></span></span></span></span></span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-7-21699-21705"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-21699" data-verso-hover="343">decide</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-21699-21705"><span class="tactic-state">All goals completed! 🐙</span></span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">⟩</span></code><p>
+                  The proposition <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&gt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">0</span></code> is decidable, so the <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">decide</span></code> tactic produces the necessary evidence.
+The <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-OfNat" data-verso-hover="418">OfNat</span></code> instance is very much like that for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Pos" data-verso-hover="385">Pos</span></code>, except it uses a short tactic proof to provide evidence that <code>n + 1 &gt; 0</code>:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-21835">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-OfNat" data-verso-hover="418">OfNat</span><span class="inter-text"> </span><span class="const token" data-binding="const-FastPos.FastPos" data-verso-hover="1072">FastPos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.62933" data-verso-hover="5">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-21868">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-OfNat.ofNat" data-verso-hover="1075">ofNat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">⟨</span><span class="var token" data-binding="var-_uniq.62933" data-verso-hover="5">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">,</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-17906365304803001190-21895-21897"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-21895" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-17906365304803001190-21895-21897"><span class="tactic-state"><span class="goal"><span class="hypotheses"><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.62933" data-verso-hover="5">n</span></span><span class="colon">:</span><span class="type"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></span></span></span><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="var token" data-binding="var-_uniq.62933" data-verso-hover="5">n</span><span class="const token" data-binding="const-HAdd.hAdd" data-verso-hover="341"> + </span><span class="inter-text">1</span><span class="const token" data-binding="const-GT.gt" data-verso-hover="372"> &gt; </span><span class="inter-text">0</span></span></span></span></span></span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-7-21898-21902"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.simp-21898" data-verso-hover="379">simp</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-21898-21902"><span class="tactic-state">All goals completed! 🐙</span></span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">⟩</span></code><p>
+                  Here, <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">simp</span></code> is needed because <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">decide</span></code> requires concrete values, but the proposition in question is <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.62933" data-verso-hover="5">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&gt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">0</span></code>.</p>
+                <p>
+                  Subtypes are a two-edged sword.
+They allow efficient representation of validation rules, but they transfer the burden of maintaining these rules to the users of the library, who have to <em>prove</em> that they are not violating important invariants.
+Generally, it's a good idea to use them internally to a library, providing an API to users that automatically ensures that all invariants are satisfied, with any necessary proofs being internal to the library.</p>
+                <p>
+                  Checking whether a value of type <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.63241" data-verso-hover="1076">α</span></code> is in the subtype <code class="hl lean inline" data-lean-context="examples"><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.63259" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63241" data-verso-hover="614">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">//</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63245" data-verso-hover="1069">p</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63259" data-verso-hover="121">x</span><span class="unknown token" data-binding="">}</span></code> usually requires that the proposition <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.63245" data-verso-hover="1069">p</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63259" data-verso-hover="121">x</span></code> be decidable.
+The <a href="Overloading-and-Type-Classes/Standard-Classes/#equality-and-ordering">section on equality and ordering classes</a> describes how decidable propositions can be used with <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">if</span></code>.
+When <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">if</span></code> is used with a decidable proposition, a name can be provided.
+In the <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">then</span></code> branch, the name is bound to evidence that the proposition is true, and in the <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">else</span></code> branch, it is bound to evidence that the proposition is false.
+This comes in handy when checking whether a given <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> is positive:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-22197">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-FastPos.Nat.asFastPos?" data-verso-hover="1077">Nat.asFastPos?</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.63263" data-verso-hover="5">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option" data-verso-hover="142">Option</span><span class="inter-text"> </span><span class="const token" data-binding="const-FastPos.FastPos" data-verso-hover="1072">FastPos</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="keyword token" data-binding="kw-occ-termDepIfThenElse-22248" data-verso-hover="1078">if</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63313" data-verso-hover="1079">h</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63263" data-verso-hover="5">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&gt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">0</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-termDepIfThenElse-22248" data-verso-hover="1078">then</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="const token" data-binding="const-Option.some" data-verso-hover="146">some</span><span class="inter-text"> </span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">⟨</span><span class="var token" data-binding="var-_uniq.63263" data-verso-hover="5">n</span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">,</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63313" data-verso-hover="1079">h</span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">⟩</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="keyword token" data-binding="kw-occ-termDepIfThenElse-22248" data-verso-hover="1078">else</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option.none" data-verso-hover="145">none</span></code><p>
+                  In the <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">then</span></code> branch, <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.63313" data-verso-hover="1079">h</span></code> is bound to evidence that <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.63263" data-verso-hover="5">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&gt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">0</span></code>, and this evidence can be used as the second argument to <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SubtypeDemo.Subtype" data-verso-hover="1068">Subtype</span></code>'s constructor.</p>
+                </section>
+              <section>
+                <h3 id="validated-input">
+                  5.2.1.3. Validated Input<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&name=validated-input" title="Permalink">🔗</a></span></h3>
+                <p>
+                  The validated user input is a structure that expresses the business logic using multiple techniques:</p>
+                <ul>
+                  <li>
+                    <p>
+                      The structure type itself encodes the year in which it was checked for validity, so that <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CheckedInput" data-verso-hover="1080">CheckedInput</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2019</span></code> is not the same type as <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CheckedInput" data-verso-hover="1080">CheckedInput</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2020</span></code></p>
+                    </li>
+                  <li>
+                    <p>
+                      The birth year is represented as a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> rather than a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-String" data-verso-hover="35">String</span></code></p>
+                    </li>
+                  <li>
+                    <p>
+                      Subtypes are used to constrain the allowed values in the name and birth year fields</p>
+                    </li>
+                  </ul>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.structureTk-22363">structure</span><span class="inter-text"> </span><span class="const token" data-binding="const-CheckedInput" data-verso-hover="1080">CheckedInput</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.63345" data-verso-hover="5">thisYear</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-22410">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-CheckedInput.name" data-verso-hover="1081">name</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.63352" data-verso-hover="39">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="inter-text"> </span><span class="unknown token" data-binding="">//</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63352" data-verso-hover="39">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">≠</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="207">""</span><span class="unknown token" data-binding="">}</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-CheckedInput.birthYear" data-verso-hover="1082">birthYear</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.63362" data-verso-hover="5">y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">//</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63362" data-verso-hover="5">y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&gt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1900</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∧</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63362" data-verso-hover="5">y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">≤</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63345" data-verso-hover="5">thisYear</span><span class="unknown token" data-binding="">}</span></code><div class="paragraph">
+                  <p>
+                    An input validator should take the current year and a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-RawInput" data-verso-hover="1065">RawInput</span></code> as arguments, returning either a checked input or at least one validation failure.
+This is represented by the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span></code> type:</p>
+                  <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.inductive-18639" data-verso-hover="96">inductive</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.54301" data-verso-hover="113">ε</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54303" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="50">Type</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-18680">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.ok" data-verso-hover="1083">ok</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54303" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54301" data-verso-hover="113">ε</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54303" data-verso-hover="113">α</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.errors" data-verso-hover="1084">errors</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-NonEmptyList" data-verso-hover="460">NonEmptyList</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54301" data-verso-hover="113">ε</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54301" data-verso-hover="113">ε</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54303" data-verso-hover="113">α</span></code><p>
+                    It looks very much like <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Except" data-verso-hover="745">Except</span></code>.
+The only difference is that the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Validate.errors" data-verso-hover="1084">errors</span></code> constructor may contain more than one failure.</p>
+                  </div>
+                <p>
+                  <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span></code> is a functor.
+Mapping a function over it transforms any successful value that might be present, just as in the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Functor" data-verso-hover="570">Functor</span></code> instance for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Except" data-verso-hover="745">Except</span></code>:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-18818">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Functor" data-verso-hover="570">Functor</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54851" data-verso-hover="113">ε</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-18851">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Functor.map" data-verso-hover="1085">map</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54872" data-verso-hover="572">f</span><span class="inter-text">
+</span><span class="inter-text">   </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.ok" data-verso-hover="1083">.ok</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54889" data-verso-hover="584">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.ok" data-verso-hover="1083">.ok</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.54872" data-verso-hover="572">f</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54889" data-verso-hover="584">x</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
+</span><span class="inter-text">   </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.errors" data-verso-hover="1084">.errors</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54903" data-verso-hover="1086">errs</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.errors" data-verso-hover="1084">.errors</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.54903" data-verso-hover="1086">errs</span></code><p>
+                  The <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span></code> instance for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span></code> has an important difference from the instance for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Except" data-verso-hover="745">Except</span></code>: while the instance for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Except" data-verso-hover="745">Except</span></code> terminates at the first error encountered, the instance for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span></code> is careful to accumulate all errors from <em>both</em> the function and the argument branches:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.instance-18987">instance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.55057" data-verso-hover="113">ε</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-19024">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Pure.pure" data-verso-hover="1087">pure</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.ok" data-verso-hover="1083">.ok</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Seq.seq" data-verso-hover="1088">seq</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.55109" data-verso-hover="1089">f</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.55112" data-verso-hover="1090">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-19061" data-verso-hover="100">match</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.55109" data-verso-hover="1089">f</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-19061" data-verso-hover="100">with</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.ok" data-verso-hover="1083">.ok</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.55132" data-verso-hover="572">g</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.55132" data-verso-hover="572">g</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;$&gt;</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.55112" data-verso-hover="1090">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.errors" data-verso-hover="1084">.errors</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.55172" data-verso-hover="1086">errs</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text">
+</span><span class="inter-text">      </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-19130" data-verso-hover="100">match</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.55112" data-verso-hover="1090">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-19130" data-verso-hover="100">with</span><span class="inter-text">
+</span><span class="inter-text">      </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.ok" data-verso-hover="1083">.ok</span><span class="inter-text"> </span><span class="unknown token" data-binding="">_</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.errors" data-verso-hover="1084">.errors</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.55172" data-verso-hover="1086">errs</span><span class="inter-text">
+</span><span class="inter-text">      </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.errors" data-verso-hover="1084">.errors</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.55199" data-verso-hover="1086">errs'</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.errors" data-verso-hover="1084">.errors</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.55172" data-verso-hover="1086">errs</span><span class="inter-text"> </span><span class="unknown token" data-binding="">++</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.55199" data-verso-hover="1086">errs'</span><span class="unknown token" data-binding="">)</span></code><div class="paragraph">
+                  <p>
+                    Using <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Validate.errors" data-verso-hover="1084">.errors</span></code> together with the constructor for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-NonEmptyList" data-verso-hover="460">NonEmptyList</span></code> is a bit verbose.
+Helpers like <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-reportError" data-verso-hover="1091">reportError</span></code> make code more readable.
+In this application, error reports will consist of field names paired with messages:</p>
+                  <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-22740">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Field" data-verso-hover="1092">Field</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span></code><code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-22806">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-reportError" data-verso-hover="1091">reportError</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.63910" data-verso-hover="1093">f</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Field" data-verso-hover="1092">Field</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.63912" data-verso-hover="39">msg</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Field" data-verso-hover="1092">Field</span><span class="inter-text"> </span><span class="unknown token" data-binding="">×</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63908" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Validate.errors" data-verso-hover="1084">.errors</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="inter-text"> </span><span class="const token" data-binding="const-NonEmptyList.head" data-verso-hover="1094">head</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.63910" data-verso-hover="1093">f</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63912" data-verso-hover="39">msg</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="const token" data-binding="const-NonEmptyList.tail" data-verso-hover="1095">tail</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">}</span></code></div>
+                <p>
+                  The <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span></code> instance for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span></code> allows the checking procedures for each field to be written independently and then composed.
+Checking a name consists of ensuring that a string is non-empty, then returning evidence of this fact in the form of a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SubtypeDemo.Subtype" data-verso-hover="1068">Subtype</span></code>.
+This uses the evidence-binding version of <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">if</span></code>:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-22976">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-checkName" data-verso-hover="1096">checkName</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.63939" data-verso-hover="39">name</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Field" data-verso-hover="1092">Field</span><span class="inter-text"> </span><span class="unknown token" data-binding="">×</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.63946" data-verso-hover="39">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="inter-text"> </span><span class="unknown token" data-binding="">//</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63946" data-verso-hover="39">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">≠</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="207">""</span><span class="unknown token" data-binding="">}</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="keyword token" data-binding="kw-occ-termDepIfThenElse-23069" data-verso-hover="1078">if</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63969" data-verso-hover="1097">h</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63939" data-verso-hover="39">name</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="207">""</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-termDepIfThenElse-23069" data-verso-hover="1078">then</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="const token" data-binding="const-reportError" data-verso-hover="1091">reportError</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1098">"name"</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1099">"Required"</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="keyword token" data-binding="kw-occ-termDepIfThenElse-23069" data-verso-hover="1078">else</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pure.pure" data-verso-hover="270">pure</span><span class="inter-text"> </span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">⟨</span><span class="var token" data-binding="var-_uniq.63939" data-verso-hover="39">name</span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">,</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.63969" data-verso-hover="1100">h</span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">⟩</span></code><p>
+                  In the <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">then</span></code> branch, <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.63969" data-verso-hover="1097">h</span></code> is bound to evidence that <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.63939" data-verso-hover="39">name</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="207">""</span></code>, while it is bound to evidence that <code>¬name = ""</code> in the <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">else</span></code> branch.</p>
+                <p>
+                  It's certainly the case that some validation errors make other checks impossible.
+For example, it makes no sense to check whether the birth year field is greater than 1900 if a confused user wrote the word <code class="hl lean inline" data-lean-context="examples"><span class="literal string token" data-binding="" data-verso-hover="1101">"syzygy"</span></code> instead of a number.
+Checking the allowed range of the number is only meaningful after ensuring that the field in fact contains a number.
+This can be expressed using the function <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Validate.andThen" data-verso-hover="1102">andThen</span></code>:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-20760">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.andThen" data-verso-hover="1102">Validate.andThen</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.61786" data-verso-hover="1103">val</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61772" data-verso-hover="113">ε</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61776" data-verso-hover="113">α</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.61790" data-verso-hover="1104">next</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61776" data-verso-hover="113">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61772" data-verso-hover="113">ε</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61784" data-verso-hover="113">β</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61772" data-verso-hover="113">ε</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61784" data-verso-hover="113">β</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-20861" data-verso-hover="100">match</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61786" data-verso-hover="1103">val</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-20861" data-verso-hover="100">with</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.errors" data-verso-hover="1084">.errors</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61811" data-verso-hover="1086">errs</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.errors" data-verso-hover="1084">.errors</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61811" data-verso-hover="1086">errs</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate.ok" data-verso-hover="1083">.ok</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61824" data-verso-hover="121">x</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61790" data-verso-hover="1104">next</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.61824" data-verso-hover="121">x</span></code><p>
+                  While this function's type signature makes it suitable to be used as <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Bind.bind" data-verso-hover="864">bind</span></code> in a <code class="hl lean inline" data-lean-context="examples"><span class="unknown token" data-binding="">Monad</span></code> instance, there are good reasons not to do so.
+They are described <a href="Functors___-Applicative-Functors___-and-Monads/The-Applicative-Contract/#additional-stipulations">in the section that describes the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span></code> contract</a>.</p>
+                <p>
+                  To check that the birth year is a number, a built-in function called <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-String.toNat?" data-verso-hover="1105">String.toNat?</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option" data-verso-hover="142">Option</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> is useful.
+It's most user-friendly to eliminate leading and trailing whitespace first using <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-String.trim" data-verso-hover="325">String.trim</span></code>:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-23204">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-checkYearIsNat" data-verso-hover="1106">checkYearIsNat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.64047" data-verso-hover="39">year</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Field" data-verso-hover="1092">Field</span><span class="inter-text"> </span><span class="unknown token" data-binding="">×</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-23277" data-verso-hover="100">match</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64047" data-verso-hover="39">year</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-String.trim" data-verso-hover="325">trim</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-String.toNat?" data-verso-hover="1105">toNat?</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-23277" data-verso-hover="100">with</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option.none" data-verso-hover="145">none</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-reportError" data-verso-hover="1091">reportError</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1107">"birth year"</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1108">"Must be digits"</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option.some" data-verso-hover="146">some</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64081" data-verso-hover="5">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Pure.pure" data-verso-hover="270">pure</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64081" data-verso-hover="5">n</span></code><div class="paragraph">
+                  <p>
+                    To check that the provided year is in the expected range, nested uses of the evidence-providing form of <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">if</span></code> are in order:</p>
+                  <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-23437">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-checkBirthYear" data-verso-hover="1109">checkBirthYear</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.64185" data-verso-hover="5">thisYear</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64187" data-verso-hover="5">year</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Field" data-verso-hover="1092">Field</span><span class="inter-text"> </span><span class="unknown token" data-binding="">×</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.64194" data-verso-hover="5">y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">//</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64194" data-verso-hover="5">y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&gt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1900</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∧</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64194" data-verso-hover="5">y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">≤</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64185" data-verso-hover="5">thisYear</span><span class="unknown token" data-binding="">}</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="keyword token" data-binding="kw-occ-termDepIfThenElse-23557" data-verso-hover="1078">if</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64262" data-verso-hover="1110">h</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64187" data-verso-hover="5">year</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&gt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1900</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-termDepIfThenElse-23557" data-verso-hover="1078">then</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="keyword token" data-binding="kw-occ-termDepIfThenElse-23585" data-verso-hover="1078">if</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64281" data-verso-hover="1111">h'</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64187" data-verso-hover="5">year</span><span class="inter-text"> </span><span class="unknown token" data-binding="">≤</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64185" data-verso-hover="5">thisYear</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-termDepIfThenElse-23585" data-verso-hover="1078">then</span><span class="inter-text">
+</span><span class="inter-text">      </span><span class="const token" data-binding="const-Pure.pure" data-verso-hover="270">pure</span><span class="inter-text"> </span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">⟨</span><span class="var token" data-binding="var-_uniq.64187" data-verso-hover="5">year</span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">,</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-4359875588598058874-23636-23638"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-23636" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-4359875588598058874-23636-23638"><span class="tactic-state"><span class="goal"><span class="hypotheses"><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.64185" data-verso-hover="5">thisYear</span></span><span class="colon">:</span><span class="type"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.64187" data-verso-hover="5">year</span></span><span class="colon">:</span><span class="type"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.64262" data-verso-hover="1110">h</span></span><span class="colon">:</span><span class="type"><span class="var token" data-binding="var-_uniq.64187" data-verso-hover="5">year</span><span class="const token" data-binding="const-GT.gt" data-verso-hover="372"> &gt; </span><span class="inter-text">1900</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.64281" data-verso-hover="1111">h'</span></span><span class="colon">:</span><span class="type"><span class="var token" data-binding="var-_uniq.64187" data-verso-hover="5">year</span><span class="const token" data-binding="const-LE.le" data-verso-hover="525"> ≤ </span><span class="var token" data-binding="var-_uniq.64185" data-verso-hover="5">thisYear</span></span></span></span><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="var token" data-binding="var-_uniq.64187" data-verso-hover="5">year</span><span class="const token" data-binding="const-GT.gt" data-verso-hover="372"> &gt; </span><span class="inter-text">1900</span><span class="const token" data-binding="const-And" data-verso-hover="350"> ∧ </span><span class="var token" data-binding="var-_uniq.64187" data-verso-hover="5">year</span><span class="const token" data-binding="const-LE.le" data-verso-hover="525"> ≤ </span><span class="var token" data-binding="var-_uniq.64185" data-verso-hover="5">thisYear</span></span></span></span></span></span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-7-23639-23647"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.simp-23639" data-verso-hover="379">simp</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="unknown token" data-binding="">*</span><span class="unknown token" data-binding="">]</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-23639-23647"><span class="tactic-state">All goals completed! 🐙</span></span><span class="unknown token" data-binding="const-Subtype.mk" data-verso-hover="1074">⟩</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="keyword token" data-binding="kw-occ-termDepIfThenElse-23585" data-verso-hover="1078">else</span><span class="inter-text"> </span><span class="const token" data-binding="const-reportError" data-verso-hover="1091">reportError</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1107">"birth year"</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-termS!_-23685">s!</span><span class="unknown token" data-binding="">"Must be no later than {</span><span class="var token" data-binding="var-_uniq.64185" data-verso-hover="5">thisYear</span><span class="unknown token" data-binding="">}"</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="keyword token" data-binding="kw-occ-termDepIfThenElse-23557" data-verso-hover="1078">else</span><span class="inter-text"> </span><span class="const token" data-binding="const-reportError" data-verso-hover="1091">reportError</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1107">"birth year"</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1112">"Must be after 1900"</span></code></div>
+                <div class="paragraph">
+                  <p>
+                    Finally, these three components can be combined using <code class="hl lean inline" data-lean-context="examples"><span class="unknown token" data-binding="">&lt;*&gt;</span></code>:</p>
+                  <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-23829">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-checkInput" data-verso-hover="1113">checkInput</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.64520" data-verso-hover="5">year</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.64522" data-verso-hover="1114">input</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-RawInput" data-verso-hover="1065">RawInput</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Field" data-verso-hover="1092">Field</span><span class="inter-text"> </span><span class="unknown token" data-binding="">×</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-CheckedInput" data-verso-hover="1080">CheckedInput</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64520" data-verso-hover="5">year</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Pure.pure" data-verso-hover="270">pure</span><span class="inter-text"> </span><span class="const token" data-binding="const-CheckedInput.mk" data-verso-hover="1115">CheckedInput.mk</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;*&gt;</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="const token" data-binding="const-checkName" data-verso-hover="1096">checkName</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64522" data-verso-hover="1114">input</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-RawInput.name" data-verso-hover="1066">name</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;*&gt;</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-checkYearIsNat" data-verso-hover="1106">checkYearIsNat</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64522" data-verso-hover="1114">input</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-RawInput.birthYear" data-verso-hover="1067">birthYear</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-Validate.andThen" data-verso-hover="1102">andThen</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.fun-24033">fun</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64676" data-verso-hover="5">birthYearAsNat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text">
+</span><span class="inter-text">      </span><span class="const token" data-binding="const-checkBirthYear" data-verso-hover="1109">checkBirthYear</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64520" data-verso-hover="5">year</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.64676" data-verso-hover="5">birthYearAsNat</span></code></div>
+                <div class="paragraph">
+                  <p>
+                    Testing <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-checkInput" data-verso-hover="1113">checkInput</span></code> shows that it can indeed return multiple pieces of feedback:</p>
+                  <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">Validate.ok { name := "David", birthYear := 1984 }</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-24346" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-checkInput" data-verso-hover="1113">checkInput</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2023</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="const token" data-binding="const-RawInput.name" data-verso-hover="465">name</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="264">"David"</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="const token" data-binding="const-RawInput.birthYear" data-verso-hover="465">birthYear</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1116">"1984"</span><span class="unknown token" data-binding="">}</span></code><div class="information">
+                    <pre>Validate.ok { name := "David", birthYear := 1984 }</pre></div>
+                  <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">Validate.errors { head := ("name", "Required"), tail := [("birth year", "Must be no later than 2023")] }</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-24598" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-checkInput" data-verso-hover="1113">checkInput</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2023</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="const token" data-binding="const-RawInput.name" data-verso-hover="465">name</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="207">""</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="const token" data-binding="const-RawInput.birthYear" data-verso-hover="465">birthYear</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1117">"2045"</span><span class="unknown token" data-binding="">}</span></code><div class="information">
+                    <pre>Validate.errors { head := ("name", "Required"), tail := [("birth year", "Must be no later than 2023")] }</pre></div>
+                  <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">Validate.errors { head := ("birth year", "Must be digits"), tail := [] }</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-24814" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-checkInput" data-verso-hover="1113">checkInput</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2023</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="const token" data-binding="const-RawInput.name" data-verso-hover="465">name</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="264">"David"</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="const token" data-binding="const-RawInput.birthYear" data-verso-hover="465">birthYear</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1101">"syzygy"</span><span class="unknown token" data-binding="">}</span></code><div class="information">
+                    <pre>Validate.errors { head := ("birth year", "Must be digits"), tail := [] }</pre></div>
+                  </div>
+                <p>
+                  Form validation with <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-checkInput" data-verso-hover="1113">checkInput</span></code> illustrates a key advantage of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span></code> over <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-FakeMonad.Monad" data-verso-hover="1007">Monad</span></code>.
+Because <code>&gt;&gt;=</code> provides enough power to modify the rest of the program's execution based on the value from the first step, it <em>must</em> receive a value from the first step to pass on.
+If no value is received (e.g. because an error has occurred), then <code>&gt;&gt;=</code> cannot execute the rest of the program.
+<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Validate" data-verso-hover="1064">Validate</span></code> demonstrates why it can be useful to run the rest of the program anyway: in cases where the earlier data isn't needed, running the rest of the program can yield useful information (in this case, more validation errors).
+<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span></code>'s <code>&lt;*&gt;</code> may run both of its arguments before recombining the results.
+Similarly, <code>&gt;&gt;=</code> forces sequential execution.
+Each step must complete before the next may run.
+This is generally useful, but it makes it impossible to have parallel execution of different threads that naturally emerges from the program's actual data dependencies.
+A more powerful abstraction like <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-FakeMonad.Monad" data-verso-hover="1007">Monad</span></code> increases the flexibility that's available to the API consumer, but it decreases the flexibility that is available to the API implementor.
+</p>
+                </section>
+              </section>
+            </section>
+          <nav class="prev-next-buttons">
+            <a class="local-button active" href="Functors___-Applicative-Functors___-and-Monads/Structures-and-Inheritance/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Structures-and-Inheritance" rel="prev" title="5.1. Structures and Inheritance"><span class="arrow">←</span><span class="where">5.1. Structures and Inheritance</span></a><a class="local-button active" href="Functors___-Applicative-Functors___-and-Monads/The-Applicative-Contract/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--The-Applicative-Contract" rel="next" title="5.3. The Applicative Contract"><span class="where">5.3. The Applicative Contract</span><span class="arrow">→</span></a></nav>
+          </div>
+        </main></div>
+    </body>
+  </html>
+

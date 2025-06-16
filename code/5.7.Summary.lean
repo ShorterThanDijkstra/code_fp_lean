@@ -1,0 +1,1 @@
+-- https://lean-lang.org/functional_programming_in_lean//Functors___-Applicative-Functors___-and-Monads/Summary/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Summary

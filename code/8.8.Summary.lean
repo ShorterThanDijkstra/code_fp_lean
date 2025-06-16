@@ -1,0 +1,1 @@
+-- https://lean-lang.org/functional_programming_in_lean//Programming___-Proving___-and-Performance/Summary/#Functional-Programming-in-Lean--Programming___-Proving___-and-Performance--Summary

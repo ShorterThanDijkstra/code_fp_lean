@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      (function(){
+  const {protocol:proto, host:hostName, pathname:path, search:srch, hash:hsh} = window.location;
+  if (!(path.endsWith("/") || path.endsWith(".html"))) {
+    window.location.replace(`${proto}//${hostName}${path}/${srch}${hsh}`);
+  }
+})()</script>
+    <base href="./../"><meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>Interlude: Propositions, Proofs, and Indexing</title><link rel="stylesheet" href="book.css">
+    <script>
+      const __versoSiteRoot = document.baseURI;</script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
+    <script src="-verso-data/katex/katex.js"></script>
+    <script src="-verso-data/katex/math.js"></script>
+    <script src="-verso-data/popper.js"></script>
+    <script src="-verso-data/tippy.js"></script>
+    <link rel="stylesheet" href="static/theme.css">
+    <link rel="stylesheet" href="static/fonts/source-serif/source-serif-text.css">
+    <link rel="stylesheet" href="static/fonts/source-code-pro/source-code-pro.css">
+    <link rel="stylesheet" href="static/fonts/source-sans/source-sans-3.css">
+    <link rel="stylesheet" href="static/fonts/noto-sans-mono/noto-sans-mono.css">
+    <link rel="stylesheet" href="-verso-data/katex/katex.css">
+    <link rel="stylesheet" href="-verso-data/tippy-border.css">
+    <style>
+div.paragraph > .eval-steps:not(:first-child), div.paragraph > .eval-steps:not(:first-child) > * {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .eval-steps:not(:last-child), div.paragraph > .eval-steps:not(:last-child) > * {
+  margin-bottom: 0.5rem;
+}
+
+.eval-steps .hl.lean.block {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+</style><style>
+.shell-command {
+
+}
+.shell-command.inline > * {
+  display: inline;
+  white-space: pre;
+}
+.shell-command.inline .command::before {
+  content: "$ ";
+  font-weight: 600;
+}
+</style><style>
+.shell-command {
+
+}
+.shell-command.block > * {
+  display: block;
+  white-space: pre;
+}
+.shell-command .command .prompt {
+  font-weight: 600;
+}
+
+div.paragraph > .shell-command:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .shell-command:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style><style>
+
+.hl.lean {
+  white-space: pre;
+  font-weight: normal;
+  font-style: normal;
+}
+
+.hl.lean .keyword {
+  font-weight : bold;
+}
+
+.hl.lean .var {
+  font-style: italic;
+  position: relative;
+}
+
+.hover-container {
+  width: 0;
+  height: 0;
+  position: relative;
+  display: inline;
+}
+
+.hl.lean a {
+  color: inherit;
+  text-decoration: currentcolor underline dotted;
+}
+
+.hl.lean a:hover {
+  text-decoration: currentcolor underline solid;
+}
+
+.hl.lean .hover-info {
+  white-space: normal;
+}
+
+.hl.lean .token .hover-info {
+  display: none;
+  position: absolute;
+  background-color: #e5e5e5;
+  border: 1px solid black;
+  padding: 0.5rem;
+  z-index: 300;
+  font-size: inherit;
+}
+
+.hl.lean .hover-info.messages {
+  max-height: 10rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  padding: 0 0.5rem 0 0;
+  display: block;
+}
+
+.hl.lean .hover-info code {
+  white-space: pre-wrap;
+}
+
+.hl.lean .hover-info.messages > code {
+  padding: 0.5rem;
+  display: block;
+  width: fit-content;
+}
+
+.hl.lean .hover-info.messages > code:only-child {
+  margin: 0;
+}
+
+.hl.lean .hover-info.messages > code {
+  margin: 0.1rem;
+}
+
+.hl.lean .hover-info.messages > code:not(:first-child) {
+  margin-top: 0rem;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .has-info:hover > .hover-container > .hover-info:not(.tactic *),
+  .hl.lean .tactic:has(> .tactic-toggle:checked) .has-info:hover > .hover-container > .hover-info,
+  .hl.lean .token:hover > .hover-container > .hover-info:not(.has-info *):not(.tactic *),
+  .hl.lean .tactic:has(> .tactic-toggle:checked) .token:hover > .hover-container > .hover-info:not(.has-info *) {
+    display: inline-block;
+    position: absolute;
+    top: 1rem;
+    font-weight: normal;
+    font-style: normal;
+    width: min-content;
+  }
+}
+*/
+
+.hl.lean.block {
+  display: block;
+}
+
+.hl.lean.inline {
+  display: inline;
+  white-space: pre-wrap;
+}
+
+.hl.lean .token {
+  transition: all 0.25s; /* Slight fade for highlights */
+}
+
+@media (hover: hover) {
+  .hl.lean .token.binding-hl, .hl.lean .literal.string:hover, .hl.lean .token.typed:hover {
+    background-color: #eee;
+    border-radius: 2px;
+    transition: none;
+  }
+}
+
+
+.hl.lean .has-info .token:not(.tactic-state):not(.tactic-state *), .hl.lean .has-info .inter-text:not(.tactic-state):not(.tactic-state *) {
+  text-decoration-style: wavy;
+  text-decoration-line: underline;
+  text-decoration-thickness: from-font;
+}
+
+.hl.lean .has-info .hover-info {
+  display: none;
+  position: absolute;
+  transform: translate(0.25rem, 0.3rem);
+  border: 1px solid black;
+  padding: 0.5rem;
+  z-index: 400;
+  text-align: left;
+}
+
+.hl.lean .has-info.error :not(.tactic-state):not(.tactic-state *){
+  text-decoration-color: red;
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.error:hover {
+    background-color: #ffb3b3;
+  }
+}
+
+.hl.lean .hover-info.messages > code.error {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid #ffb3b3;
+}
+
+.tippy-box[data-theme~='error'] .hl.lean .hover-info.messages > code.error {
+  background: none;
+  border: none;
+}
+
+.error pre {
+    color: red;
+}
+
+.hl.lean .has-info.warning :not(.tactic-state):not(.tactic-state *) {
+  text-decoration-color: var(--verso-warning-color);
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.warning:hover {
+    background-color:var(--verso-warning-color);
+  }
+}
+
+.hl.lean .hover-info.messages > code.warning {
+  background-color: var(--verso-warning-color);
+}
+
+.hl.lean .hover-info.messages > code.error {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid var(--verso-warning-color);
+}
+
+.tippy-box[data-theme~='warning'] .hl.lean .hover-info.messages > code.warning {
+  background: none;
+  border: none;
+}
+
+
+.hl.lean .has-info.info :not(.tactic-state):not(.tactic-state *) {
+  text-decoration-color: blue;
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.info:hover {
+    background-color: #4777ff;
+  }
+}
+
+
+.hl.lean .hover-info.messages > code.info {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid #4777ff;
+}
+
+.tippy-box[data-theme~='info'] .hl.lean .hover-info.messages > code.info {
+  background: none;
+  border: none;
+}
+
+.hl.lean div.docstring {
+  font-family: sans-serif;
+  white-space: normal;
+  max-width: 40rem;
+  width: max-content;
+}
+
+.hl.lean div.docstring > :last-child {
+  margin-bottom: 0;
+}
+
+.hl.lean div.docstring > :first-child {
+  margin-top: 0;
+}
+
+.hl.lean .hover-info .sep {
+  display: block;
+  width: auto;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding: 0;
+  height: 1px;
+  border-top: 1px solid #ccc;
+}
+
+.hl.lean code {
+  font-family: monospace;
+}
+
+.hl.lean .tactic-state {
+  display: none;
+  position: relative;
+  left: 2rem;
+  width: fit-content;
+  border: 1px solid #888888;
+  border-radius: 0.1rem;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  background-color: #ffffff;
+  z-index: 200;
+}
+
+.hl.lean.popup .tactic-state {
+  position: static;
+  display: block;
+  width: auto;
+  border: none;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  background-color: #ffffff;
+}
+
+
+.hl.lean .tactic {
+  position: relative;
+}
+
+.hl.lean .tactic-toggle:checked ~ .tactic-state {
+  display: block;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .tactic:hover > .tactic-toggle:not(:checked) ~ .tactic-state {
+    display: block;
+    position: absolute;
+    left: 0;
+    transform: translate(0.25rem, 0);
+    z-index: 250;
+  }
+}
+*/
+
+.hl.lean .tactic > label {
+  position: relative;
+  transition: all 0.5s;
+}
+
+@media (hover: hover) {
+  .hl.lean .tactic > label:hover {
+    border-bottom: 1px dotted #bbbbbb;
+  }
+}
+
+.hl.lean .tactic-toggle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  z-index: -10;
+}
+
+.hl.lean .tactic > label::after {
+  content: "";
+  border: 1px solid #bbbbbb;
+  border-radius: 1rem;
+  height: 0.25rem;
+  vertical-align: middle;
+  width: 0.6rem;
+  margin-left: 0.1rem;
+  margin-right: 0.1rem;
+  display: inline-block;
+  transition: all 0.5s;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .tactic > label:hover::after {
+    border: 1px solid #aaaaaa;
+    background-color: #aaaaaa;
+    transition: all 0.5s;
+  }
+}
+*/
+
+.hl.lean .tactic > label:has(+ .tactic-toggle:checked)::after {
+  border: 1px solid #999999;
+  background-color: #999999;
+  transition: all 0.5s;
+}
+
+.hl.lean .tactic-state .goal + .goal {
+  margin-top: 1.5rem;
+}
+
+.hl.lean .tactic-state summary {
+  margin-left: -0.5rem;
+}
+
+.hl.lean .tactic-state details {
+  padding-left: 0.5rem;
+}
+
+.hl.lean .case-label {
+  display: block;
+  position: relative;
+}
+
+.hl.lean .case-label input[type="checkbox"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  z-index: -10;
+}
+
+.hl.lean .case-label:has(input[type="checkbox"])::before {
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+  background-color: black;
+  content: ' ';
+  transition: ease 0.2s;
+  margin-right: 0.7rem;
+  clip-path: polygon(100% 0, 0 0, 50% 100%);
+  width: 0.6rem;
+  height: 0.6rem;
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]:not(:checked))::before {
+  transform: rotate(-90deg);
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]) {
+
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]:checked) {
+
+}
+
+
+.hl.lean .tactic-state .labeled-case > :not(:first-child) {
+  max-height: 0px;
+  display: block;
+  overflow: hidden;
+  transition: max-height 0.1s ease-in;
+  margin-left: 0.5rem;
+  margin-top: 0.1rem;
+}
+
+.hl.lean .labeled-case:has(.case-label input[type="checkbox"]:checked) > :not(:first-child) {
+  max-height: 100%;
+}
+
+
+.hl.lean .tactic-state .goal-name::before {
+  font-style: normal;
+  content: "case ";
+}
+
+.hl.lean .tactic-state .goal-name {
+  font-style: italic;
+  font-family: monospace;
+}
+
+.hl.lean .tactic-state .hypotheses {
+  display: table;
+}
+
+.hl.lean .tactic-state .hypothesis {
+  display: table-row;
+}
+
+.hl.lean .tactic-state .hypothesis > * {
+  display: table-cell;
+}
+
+
+.hl.lean .tactic-state .hypotheses .colon {
+  text-align: center;
+  min-width: 1rem;
+}
+
+.hl.lean .tactic-state .hypotheses .name {
+  text-align: right;
+}
+
+.hl.lean .tactic-state .hypotheses .name,
+.hl.lean .tactic-state .hypotheses .type,
+.hl.lean .tactic-state .conclusion .type {
+  font-family: monospace;
+}
+
+.tippy-box[data-theme~='lean'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 1px solid black;
+}
+.tippy-box[data-theme~='lean'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: #e5e5e5;
+}
+
+.tippy-box[data-theme~='message'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #e5e5e5;
+  border-width: 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='top'] > .tippy-arrow::after {
+  bottom: -11px;
+  border-width: 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-width: 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='bottom'] > .tippy-arrow::after {
+  top: -11px;
+  border-width: 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: #e5e5e5;
+  border-width: 11px 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='left'] > .tippy-arrow::after {
+  right: -11px;
+  border-width: 11px 0 11px 11px;
+}
+
+.tippy-box[data-theme~='message'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: #e5e5e5;
+  border-width: 11px 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='right'] > .tippy-arrow::after {
+  left: -11px;
+  border-width: 11px 11px 11px 0;
+}
+
+
+
+.tippy-box[data-theme~='warning'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid var(--verso-warning-color);
+}
+
+.tippy-box[data-theme~='error'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid #f7a7af;
+}
+
+.tippy-box[data-theme~='info'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid #99b3c2;
+}
+
+.tippy-box[data-theme~='tactic'] {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: white;
+}
+
+</style><style>
+.example-file {
+  white-space: normal;
+  font-family: var(--verso-structure-font-family);
+  margin: 1rem;
+  width: fit-content;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+
+  /* These are necessary for the container to behave nicely on mobile */
+  overflow-x: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.example-file::before {
+  counter-reset: linenumber;
+}
+.example-file > .line {
+  display: block;
+  white-space: pre;
+  counter-increment: linenumber;
+  font-family: var(--verso-code-font-family);
+}
+.example-file > .line::before {
+  -webkit-user-select: none;
+  display: inline-block;
+  content: counter(linenumber);
+  border-right: 1px solid #ddd;
+  width: 2em;
+  padding-right: 0.25em;
+  margin-right: 0.25em;
+  font-family: var(--verso-code-font-family);
+  text-align: right;
+}
+.example-file > .line::after {
+  -webkit-user-select: none;
+  display: inline-block;
+  content: "⏎";
+  opacity: 0;
+}
+.example-file > .line:hover::after {
+  opacity: 1;
+}
+.example-file > .line:hover, .example-file > .line:hover::before {
+  background-color: #eee;
+}
+.example-file > .empty {
+  display: block;
+  white-space: pre;
+  font-family: var(--verso-code-font-family);
+  font-style: italic;
+}
+.example-file > .empty::before {
+  -webkit-user-select: none;
+  display: inline-block;
+  content: "";
+  border-right: 1px solid #ddd;
+  width: 2em;
+  padding-right: 0.25em;
+  margin-right: 0.25em;
+  font-family: var(--verso-code-font-family);
+  text-align: right;
+}
+</style><style>
+table.tabular {
+  margin: auto;
+  border-spacing: 1rem;
+}
+table.tabular.left-align {
+  margin-right: auto;
+  margin-left: 0;
+}
+table.tabular.center-align {
+  margin: auto;
+}
+table.tabular.right-align {
+  margin-left auto;
+  margin-right: 0;
+}
+table.tabular td, table.tabular th {
+  text-align: left;
+  vertical-align: top;
+}
+table.tabular td > p:first-child, table.tabular th > p:first-child {
+  margin-top: 0;
+}
+table.tabular td > p:last-child, table.tabular th > p:first-child {
+  margin-bottom: 0;
+}
+</style><style>
+.shell-commands {
+
+}
+.shell-commands > * {
+  display: block;
+  white-space: pre;
+}
+.shell-commands .command::before {
+  content: "$ ";
+  font-weight: 600;
+}
+
+div.paragraph > .shell-commands:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .shell-commands:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style><style>
+.eq-steps .hl.lean.block {
+  background-color: #f6f7f6;
+  padding: 1rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+.eq-steps .reason {
+  font-style: italic;
+  margin-left: 2.5em;
+  display: flex;
+}
+.eq-steps .reason::before {
+  content: "={";
+  font-family: var(--verso-code-font-family);
+  font-style: normal;
+  font-weight: 600;
+  margin-right: 0.5em;
+  align-self: center;
+}
+.eq-steps .reason > p {
+  margin: 0;
+  max-width: 25em;
+  align-self: center;
+}
+.eq-steps .reason::after {
+  content: "}=";
+  font-family: var(--verso-code-font-family);
+  font-style: normal;
+  font-weight: 600;
+  margin-left: 1em;
+  align-self: center;
+}
+</style><style>
+div.paragraph > .eq-steps:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .eq-steps:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style><script>
+      
+window.onload = () => {
+
+    // Don't show hovers inside of closed tactic states
+    function blockedByTactic(elem) {
+      let parent = elem.parentNode;
+      while (parent && "classList" in parent) {
+        if (parent.classList.contains("tactic")) {
+          const toggle = parent.querySelector("input.tactic-toggle");
+          if (toggle) {
+            return !toggle.checked;
+          }
+        }
+        parent = parent.parentNode;
+      }
+      return false;
+    }
+
+    function blockedByTippy(elem) {
+      // Don't show a new hover until the old ones are all closed.
+      // Scoped to the nearest "top-level block" to avoid being O(n) in the size of the document.
+      var block = elem;
+      const topLevel = new Set(["section", "body", "html", "nav", "header"]);
+      while (block.parentNode && !topLevel.has(block.parentNode.nodeName.toLowerCase())) {
+        block = block.parentNode;
+      }
+      for (const child of block.querySelectorAll(".token, .has-info")) {
+        if (child._tippy && child._tippy.state.isVisible) { return true };
+      }
+      return false;
+    }
+
+    for (const c of document.querySelectorAll(".hl.lean .token")) {
+        if (c.dataset.binding != "") {
+            c.addEventListener("mouseover", (event) => {
+                if (blockedByTactic(c)) {return;}
+                const context = c.closest(".hl.lean").dataset.leanContext;
+                for (const example of document.querySelectorAll(".hl.lean")) {
+                    if (example.dataset.leanContext == context) {
+                        for (const tok of example.querySelectorAll(".token")) {
+                            if (c.dataset.binding == tok.dataset.binding) {
+                                tok.classList.add("binding-hl");
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        c.addEventListener("mouseout", (event) => {
+            for (const tok of document.querySelectorAll(".hl.lean .token")) {
+                tok.classList.remove("binding-hl");
+            }
+        });
+    }
+    /* Render docstrings */
+    if ('undefined' !== typeof marked) {
+        for (const d of document.querySelectorAll("code.docstring, pre.docstring")) {
+            const str = d.innerText;
+            const html = marked.parse(str);
+            const rendered = document.createElement("div");
+            rendered.classList.add("docstring");
+            rendered.innerHTML = html;
+            d.parentNode.replaceChild(rendered, d);
+        }
+    }
+    // Add hovers
+    let siteRoot = typeof __versoSiteRoot !== 'undefined' ? __versoSiteRoot : "/";
+    let docsJson = siteRoot + "-verso-docs.json";
+    fetch(docsJson).then((resp) => resp.json()).then((versoDocData) => {
+
+      function hideParentTooltips(element) {
+        let parent = element.parentElement;
+        while (parent) {
+          const tippyInstance = parent._tippy;
+          if (tippyInstance) {
+            tippyInstance.hide();
+          }
+          parent = parent.parentElement;
+        }
+      }
+
+
+
+      const defaultTippyProps = {
+        /* DEBUG -- remove the space: * /
+        onHide(any) { return false; },
+        trigger: "click",
+        // */
+        /* theme: "lean", */
+        maxWidth: "none",
+        appendTo: () => document.body,
+        interactive: true,
+        delay: [100, null],
+        /* ignoreAttributes: true, */
+        followCursor: 'initial',
+        onShow(inst) {
+          if (inst.reference.className == 'tactic') {
+
+            const toggle = inst.reference.querySelector("input.tactic-toggle");
+            if (toggle && toggle.checked) {
+              return false;
+            }
+            hideParentTooltips(inst.reference);
+            //if (blockedByTippy(inst.reference)) { return false; }
+
+          } else if (inst.reference.querySelector(".hover-info") || "versoHover" in inst.reference.dataset) {
+            if (blockedByTactic(inst.reference)) { return false };
+            if (blockedByTippy(inst.reference)) { return false; }
+          } else { // Nothing to show here!
+            return false;
+          }
+        },
+        content (tgt) {
+          const content = document.createElement("span");
+          if (tgt.className == 'tactic') {
+            const state = tgt.querySelector(".tactic-state").cloneNode(true);
+            state.style.display = "block";
+            content.appendChild(state);
+            content.style.display = "block";
+            content.className = "hl lean popup";
+          } else {
+            content.className = "hl lean";
+            content.style.display = "block";
+            content.style.maxHeight = "300px";
+            content.style.overflowY = "auto";
+            content.style.overflowX = "hidden";
+            const hoverId = tgt.dataset.versoHover;
+            const hoverInfo = tgt.querySelector(".hover-info");
+            if (hoverId) { // Docstrings from the table
+              // TODO stop doing an implicit conversion from string to number here
+              let data = versoDocData[hoverId];
+              if (data) {
+                const info = document.createElement("span");
+                info.className = "hover-info";
+                info.style.display = "block";
+                info.innerHTML = data;
+                content.appendChild(info);
+                /* Render docstrings - TODO server-side */
+                if ('undefined' !== typeof marked) {
+                    for (const d of content.querySelectorAll("code.docstring, pre.docstring")) {
+                        const str = d.innerText;
+                        const html = marked.parse(str);
+                        const rendered = document.createElement("div");
+                        rendered.classList.add("docstring");
+                        rendered.innerHTML = html;
+                        d.parentNode.replaceChild(rendered, d);
+                    }
+                }
+              } else {
+                content.innerHTML = "Failed to load doc ID: " + hoverId;
+              }
+            } else if (hoverInfo) { // The inline info, still used for compiler messages
+              content.appendChild(hoverInfo.cloneNode(true));
+            }
+          }
+          return content;
+        }
+      };
+
+
+
+      const addTippy = (selector, props) => {
+        tippy(selector, Object.assign({}, defaultTippyProps, props));
+      };
+      document.querySelectorAll('.hl.lean .const.token, .hl.lean .keyword.token, .hl.lean .literal.token, .hl.lean .option.token, .hl.lean .var.token, .hl.lean .typed.token').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'lean');
+      });
+      document.querySelectorAll('.hl.lean .has-info.warning').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'warning message');
+      });
+      document.querySelectorAll('.hl.lean .has-info.info').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'info message');
+      });
+      document.querySelectorAll('.hl.lean .has-info.error').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'error message');
+      });
+      document.querySelectorAll('.hl.lean .tactic').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'tactic');
+      });
+      let insts = tippy('.hl.lean .const.token, .hl.lean .keyword.token, .hl.lean .literal.token, .hl.lean .option.token, .hl.lean .var.token, .hl.lean .typed.token, .hl.lean .has-info, .hl.lean .tactic', defaultTippyProps);
+
+
+
+      /*
+      tippy('.hl.lean .tactic', {
+        allowHtml: true,
+
+        onHide(any) { return false; },
+        trigger: "click",
+
+        maxWidth: "none",
+        onShow(inst) {
+          const toggle = inst.reference.querySelector("input.tactic-toggle");
+          if (toggle && toggle.checked) {
+            return false;
+          }
+          if (blockedByTippy(inst.reference)) { return false; }
+        },
+        content (tgt) {
+          const content = document.createElement("span");
+          const state = tgt.querySelector(".tactic-state").cloneNode(true);
+          state.style.display = "block";
+          content.appendChild(state);
+          content.style.display = "block";
+          content.className = "hl lean popup";
+          return content;
+        }
+      });
+      */
+  });
+}
+</script>
+    </head>
+  <body>
+    <header>
+      <div class="header-logo-wrapper">
+        <a href="" id="logo"><img src="static/lean_logo.svg"></a></div>
+      <div class="header-title-wrapper">
+        <a href="" class="header-title"><h1>
+            Functional Programming in Lean</h1>
+          </a></div>
+      </header>
+    <label for="toggle-toc" id="toggle-toc-click"><span class="line line1"></span><span class="line line2"></span><span class="line line3"></span></label><div class="with-toc">
+      <div class="toc-backdrop" onclick="document.getElementById('toggle-toc-click')?.click()"></div>
+      <nav id="toc">
+        <input type="checkbox" id="toggle-toc"><div class="first">
+          <a href="" class="toc-title"><h1>
+              Functional Programming in Lean</h1>
+            </a><div class="split-tocs">
+            <div class="split-toc book">
+              <div class="title">
+                <label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot" checked="checked"></label><span class="">Table of Contents</span></div>
+              <table><tr class="unnumbered"><td class="num"><td><a href="Introduction/#Functional-Programming-in-Lean--Introduction">Introduction</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Acknowledgments/#Functional-Programming-in-Lean--Acknowledgments">Acknowledgments</a></td></tr><tr class="numbered"><td class="num">1.</td><td><a href="Getting-to-Know-Lean/#getting-to-know">Getting to Know Lean</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Hello___-World___/#hello-world">Hello, World!</a></td></tr><tr class="current unnumbered"><td class="num"><td><a href="Interlude___-Propositions___-Proofs___-and-Indexing/#props-proofs-indexing">Interlude: Propositions, Proofs, and Indexing</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="Overloading-and-Type-Classes/#Functional-Programming-in-Lean--Overloading-and-Type-Classes">Overloading and Type Classes</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="Monads/#Functional-Programming-in-Lean--Monads">Monads</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads">Functors, Applicative Functors, and Monads</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Monad-Transformers/#Functional-Programming-in-Lean--Monad-Transformers">Monad Transformers</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Programming-with-Dependent-Types/#Functional-Programming-in-Lean--Programming-with-Dependent-Types">Programming with Dependent Types</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Tactics___-Induction___-and-Proofs/#Functional-Programming-in-Lean--Interlude___-Tactics___-Induction___-and-Proofs">Interlude: Tactics, Induction, and Proofs</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Programming___-Proving___-and-Performance/#Functional-Programming-in-Lean--Programming___-Proving___-and-Performance">Programming, Proving, and Performance</a></td></tr><tr class="numbered"><td class="num">9.</td><td><a href="Next-Steps/#next-steps">Next Steps</a></td></tr></table></div>
+            <div class="split-toc">
+              <div class="title">
+                <label for="--verso-manual-toc-props-proofs-indexing" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-props-proofs-indexing" checked="checked"></label><span class="unnumbered"></span><span class="current"><a href="Interlude___-Propositions___-Proofs___-and-Indexing/#props-proofs-indexing">Interlude: Propositions, Proofs, and Indexing</a></span></div>
+              <table><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Propositions___-Proofs___-and-Indexing/#Functional-Programming-in-Lean--Interlude___-Propositions___-Proofs___-and-Indexing--Propositions-and-Proofs">Propositions and Proofs</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Propositions___-Proofs___-and-Indexing/#Functional-Programming-in-Lean--Interlude___-Propositions___-Proofs___-and-Indexing--Tactics">Tactics</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Propositions___-Proofs___-and-Indexing/#connectives">Connectives</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Propositions___-Proofs___-and-Indexing/#Functional-Programming-in-Lean--Interlude___-Propositions___-Proofs___-and-Indexing--Evidence-as-Arguments">Evidence as Arguments</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Propositions___-Proofs___-and-Indexing/#Functional-Programming-in-Lean--Interlude___-Propositions___-Proofs___-and-Indexing--Indexing-Without-Evidence">Indexing Without Evidence</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Propositions___-Proofs___-and-Indexing/#Functional-Programming-in-Lean--Interlude___-Propositions___-Proofs___-and-Indexing--Messages-You-May-Meet">Messages You May Meet</a></td></tr></table></div>
+            </div>
+          </div>
+        <div class="last">
+          <ul id="meta-links">
+            <li>
+              <a href="https://github.com/leanprover/fp-lean">Source Code</a></li>
+            <li>
+              <a href="https://github.com/leanprover/fp-lean/issues">Report Issues</a></li>
+            </ul>
+          </div>
+        </nav>
+      <main><div class="content-wrapper">
+          <nav class="prev-next-buttons">
+            <a class="local-button active" href="Hello___-World___/Summary/#Functional-Programming-in-Lean--Hello___-World___--Summary" rel="prev" title="2.6. Summary"><span class="arrow">←</span><span class="where">2.6. Summary</span></a><a class="local-button active" href="Overloading-and-Type-Classes/#Functional-Programming-in-Lean--Overloading-and-Type-Classes" rel="next" title="3. Overloading and Type Classes"><span class="where">3. Overloading and Type Classes</span><span class="arrow">→</span></a></nav>
+          <section>
+            <h1>
+              Interlude: Propositions, Proofs, and Indexing<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&name=props-proofs-indexing" title="Permalink">🔗</a></span></h1>
+            <p>
+              Like many languages, Lean uses square brackets for indexing into arrays and lists.
+For instance, if <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span></code> is defined as follows:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-74">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-List" data-verso-hover="111">List</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">[</span><span class="literal string token" data-binding="" data-verso-hover="327">"hedgehog"</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="328">"deer"</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="329">"snail"</span><span class="unknown token" data-binding="">]</span></code><p>
+              then the individual components can be extracted:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-197">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-hedgehog" data-verso-hover="330">hedgehog</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span><span class="unknown token" data-binding="">[</span><span class="typed token" data-binding="" data-verso-hover="5">0</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-233">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-deer" data-verso-hover="331">deer</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span><span class="unknown token" data-binding="">[</span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-265">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-snail" data-verso-hover="332">snail</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span><span class="unknown token" data-binding="">[</span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="unknown token" data-binding="">]</span></code><p>
+              However, attempting to extract the fourth element results in a compile-time error, rather than a run-time error:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-773">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-oops" data-verso-hover="333">oops</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">failed to prove index is valid, possible solutions:
+  - Use `have`-expressions to prove the index is valid
+  - Use `a[i]!` notation instead, runtime check is performed, and 'Panic' error message is produced if index is not valid
+  - Use `a[i]?` notation instead, result is an `Option` type
+  - Use `a[i]'h` notation instead, where `h` is a proof that index is valid
+⊢ 3 &lt; woodlandCritters.length</code></span></span><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span><span class="unknown token" data-binding="">[</span><span class="typed token" data-binding="" data-verso-hover="5">3</span><span class="unknown token" data-binding="">]</span></span></code><div class="error">
+              <pre>failed to prove index is valid, possible solutions:
+  - Use `have`-expressions to prove the index is valid
+  - Use `a[i]!` notation instead, runtime check is performed, and 'Panic' error message is produced if index is not valid
+  - Use `a[i]?` notation instead, result is an `Option` type
+  - Use `a[i]'h` notation instead, where `h` is a proof that index is valid
+⊢ 3 &lt; woodlandCritters.length</pre></div>
+            <p>
+              This error message is saying Lean tried to automatically mathematically prove that <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">3</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-List.length" data-verso-hover="140">length</span></code> (i.e. <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">3</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-List.length" data-verso-hover="140">List.length</span><span class="inter-text"> </span><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span></code>), which would mean that the lookup was safe, but that it could not do so.
+Out-of-bounds errors are a common class of bugs, and Lean uses its dual nature as a programming language and a theorem prover to rule out as many as possible.</p>
+            <p>
+              Understanding how this works requires an understanding of three key ideas: propositions, proofs, and tactics.</p>
+            <section>
+              <h2 id="Functional-Programming-in-Lean--Interlude___-Propositions___-Proofs___-and-Indexing--Propositions-and-Proofs">
+                Propositions and Proofs</h2>
+              <p>
+                A <em>proposition</em> is a statement that can be true or false.
+All of the following English sentences are propositions:</p>
+              <ul>
+                <li>
+                  <p>
+                    <code class="math inline">1 + 1 = 2</code></p>
+                  </li>
+                <li>
+                  <p>
+                    Addition is commutative.</p>
+                  </li>
+                <li>
+                  <p>
+                    There are infinitely many prime numbers.</p>
+                  </li>
+                <li>
+                  <p>
+                    <code class="math inline">1 + 1 = 15</code></p>
+                  </li>
+                <li>
+                  <p>
+                    Paris is the capital of France.</p>
+                  </li>
+                <li>
+                  <p>
+                    Buenos Aires is the capital of South Korea.</p>
+                  </li>
+                <li>
+                  <p>
+                    All birds can fly.</p>
+                  </li>
+                </ul>
+              <p>
+                On the other hand, nonsense statements are not propositions.
+Despite being grammatical, none of the following are propositions:</p>
+              <ul>
+                <li>
+                  <p>
+                    1 + green = ice cream</p>
+                  </li>
+                <li>
+                  <p>
+                    All capital cities are prime numbers.</p>
+                  </li>
+                <li>
+                  <p>
+                    At least one gorg is a fleep.</p>
+                  </li>
+                </ul>
+              <p>
+                Propositions come in two varieties: those that are purely mathematical, relying only on our definitions of concepts, and those that are facts about the world.
+Theorem provers like Lean are concerned with the former category, and have nothing to say about the flight capabilities of penguins or the legal status of cities.</p>
+              <p>
+                A <em>proof</em> is a convincing argument that a proposition is true.
+For mathematical propositions, these arguments make use of the definitions of the concepts that are involved as well as the rules of logical argumentation.
+Most proofs are written for people to understand, and leave out many tedious details.
+Computer-aided theorem provers like Lean are designed to allow mathematicians to write proofs while omitting many details, and it is the software's responsibility to fill in the missing explicit steps.
+These steps can be mechanically checked.
+This decreases the likelihood of oversights or mistakes.</p>
+              <p>
+                In Lean, a program's type describes the ways it can be interacted with.
+For instance, a program of type <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-List" data-verso-hover="111">List</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span></code> is a function that takes a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code> argument and produces a list of strings.
+In other words, each type specifies what counts as a program with that type.</p>
+              <p>
+                In Lean, propositions are in fact types.
+They specify what counts as evidence that the statement is true.
+The proposition is proved by providing this evidence, which is checked by Lean.
+On the other hand, if the proposition is false, then it will be impossible to construct this evidence.</p>
+              <p>
+                For example, the proposition <code class="math inline">1 + 1 = 2</code> can be written directly in Lean.
+The evidence for this proposition is the constructor <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-rfl" data-verso-hover="334">rfl</span></code>, which is short for <em>reflexivity</em>.
+In mathematics, a relation is <em>reflexive</em> if every element is related to itself; this is a basic requirement in order to have a sensible notion of equality.
+Because <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span></code> computes to <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">2</span></code>, they are really the same thing:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-861">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-onePlusOneIsTwo" data-verso-hover="335">onePlusOneIsTwo</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-rfl" data-verso-hover="334">rfl</span></code><p>
+                On the other hand, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-rfl" data-verso-hover="334">rfl</span></code> does not prove the false proposition <code class="math inline">1 + 1 = 15</code>:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-1097">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-onePlusOneIsFifteen" data-verso-hover="336">onePlusOneIsFifteen</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">15</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">type mismatch
+  rfl
+has type
+  ?m.1247 = ?m.1247 : Prop
+but is expected to have type
+  1 + 1 = 15 : Prop</code></span></span><span class="const token" data-binding="const-rfl" data-verso-hover="334">rfl</span></span></code><div class="error">
+                <pre>type mismatch
+  rfl
+has type
+  ?m.1247 = ?m.1247 : Prop
+but is expected to have type
+  1 + 1 = 15 : Prop</pre></div>
+              <p>
+                This error message indicates that <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-rfl" data-verso-hover="334">rfl</span></code> can prove that two expressions are equal when both sides of the equality statement are already the same number.
+Because <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span></code> evaluates directly to <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">2</span></code>, they are considered to be the same, which allows <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-onePlusOneIsTwo" data-verso-hover="335">onePlusOneIsTwo</span></code> to be accepted.
+Just as <code class="hl lean inline" data-lean-context="examples"><span class="sort token" data-binding="" data-verso-hover="50">Type</span></code> describes types such as <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span></code>, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-String" data-verso-hover="35">String</span></code>, and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-List" data-verso-hover="111">List</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Nat" data-verso-hover="6">Nat</span><span class="inter-text"> </span><span class="unknown token" data-binding="">×</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="inter-text"> </span><span class="unknown token" data-binding="">×</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Int" data-verso-hover="28">Int</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-Float" data-verso-hover="59">Float</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span></code> that represent data structures and functions, <code class="hl lean inline" data-lean-context="examples"><span class="sort token" data-binding="" data-verso-hover="3">Prop</span></code> describes propositions.</p>
+              <p>
+                When a proposition has been proven, it is called a <em>theorem</em>.
+In Lean, it is conventional to declare theorems with the <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">theorem</span></code> keyword instead of <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">def</span></code>.
+This helps readers see which declarations are intended to be read as mathematical proofs, and which are definitions.
+Generally speaking, with a proof, what matters is that there is evidence that a proposition is true, but it's not particularly important <em>which</em> evidence was provided.
+With definitions, on the other hand, it matters very much which particular value is selected—after all, a definition of addition that always returns <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">0</span></code> is clearly wrong.
+Because the details of a proof don't matter for later proofs, using the <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">theorem</span></code> keyword enables greater parallelism in the Lean compiler.</p>
+              <p>
+                The prior example could be rewritten as follows:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-1224">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Foo.OnePlusOneIsTwo" data-verso-hover="337">OnePlusOneIsTwo</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="3">Prop</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="inter-text">
+</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.theorem-1265">theorem</span><span class="inter-text"> </span><span class="const token" data-binding="const-Foo.onePlusOneIsTwo" data-verso-hover="338">onePlusOneIsTwo</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Foo.OnePlusOneIsTwo" data-verso-hover="337">OnePlusOneIsTwo</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-rfl" data-verso-hover="334">rfl</span></code></section>
+            <section>
+              <h2 id="Functional-Programming-in-Lean--Interlude___-Propositions___-Proofs___-and-Indexing--Tactics">
+                Tactics</h2>
+              <p>
+                Proofs are normally written using <em>tactics</em>, rather than by providing evidence directly.
+Tactics are small programs that construct evidence for a proposition.
+These programs run in a <em>proof state</em> that tracks the statement that is to be proved (called the <em>goal</em>) along with the assumptions that are available to prove it.
+Running a tactic on a goal results in a new proof state that contains new goals.
+The proof is complete when all goals have been proven.</p>
+              <p>
+                To write a proof with tactics, begin the definition with <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">by</span></code>.
+Writing <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">by</span></code> puts Lean into tactic mode until the end of the next indented block.
+While in tactic mode, Lean provides ongoing feedback about the current proof state.
+Written with tactics, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Foo2.onePlusOneIsTwo" data-verso-hover="339">onePlusOneIsTwo</span></code> is still quite short:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.theorem-2006">theorem</span><span class="inter-text"> </span><span class="const token" data-binding="const-Foo2.onePlusOneIsTwo" data-verso-hover="339">onePlusOneIsTwo</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-7604198462819786412-2045-2047"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-2045" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7604198462819786412-2045-2047"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="inter-text">1</span><span class="const token" data-binding="const-HAdd.hAdd" data-verso-hover="341"> + </span><span class="inter-text">1</span><span class="const token" data-binding="const-Eq" data-verso-hover="342"> = </span><span class="inter-text">2</span></span></span></span></span></span><span class="tactic"><label for="tactic-state-7-2050-2056"><span class="inter-text">
+  </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-2050" data-verso-hover="343">decide</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-2050-2056"><span class="tactic-state">All goals completed! 🐙</span></span></code><p>
+                The <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">decide</span></code> tactic invokes a <em>decision procedure</em>, which is a program that can check whether a statement is true or false, returning a suitable proof in either case.
+It is primarily used when working with concrete values like <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">1</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">2</span></code>.
+The other important tactic in this book is <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">simp</span></code>, short for “simplify,” which is the workhorse of Lean proofs.
+It rewrites the goal to as simple a form as possible.
+In many cases, this rewriting simplifies the statement so much that it can be automatically proved.
+Behind the scenes, a detailed formal proof is constructed, but using <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">simp</span></code> hides this complexity.</p>
+              <p>
+                Tactics are useful for a number of reasons:</p>
+              <ol start="1">
+                <li>
+                  <p>
+                    Many proofs are complicated and tedious when written out down to the smallest detail, and tactics can automate these uninteresting parts.</p>
+                  </li>
+                <li>
+                  <p>
+                    Proofs written with tactics are easier to maintain over time, because flexible automation can paper over small changes to definitions.</p>
+                  </li>
+                <li>
+                  <p>
+                    Because a single tactic can prove many different theorems, Lean can use tactics behind the scenes to free users from writing proofs by hand. For instance, an array lookup requires a proof that the index is in bounds, and a tactic can typically construct that proof without the user needing to worry about it.</p>
+                  </li>
+                </ol>
+              <p>
+                Behind the scenes, indexing notation uses a tactic to prove that the user's lookup operation is safe.
+This tactic takes many facts about arithmetic into account, combining them with any locally-known facts to attempt to prove that the index is in bounds.</p>
+              </section>
+            <section>
+              <h2 id="connectives">
+                Connectives<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&name=connectives" title="Permalink">🔗</a></span></h2>
+              <p>
+                The basic building blocks of logic, such as “and”, “or”, “true”, “false”, and “not”, are called <span id="--tech-term-logical-connectives" class="def-technical-term"><em>logical connectives</em></span>.
+Each connective defines what counts as evidence of its truth.
+For example, to prove a statement “<em>A</em> and <em>B</em>”, one must prove both <em>A</em> and <em>B</em>.
+This means that evidence for “<em>A</em> and <em>B</em>” is a pair that contains both evidence for <em>A</em> and evidence for <em>B</em>.
+Similarly, evidence for “<em>A</em> or <em>B</em>” consists of either evidence for <em>A</em> or evidence for <em>B</em>.</p>
+              <p>
+                In particular, most of these connectives are defined like datatypes, and they have constructors.
+If <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code> are propositions, then “<code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>” (written <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∧</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>) is a proposition.
+Evidence for <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∧</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code> consists of the constructor <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-And.intro" data-verso-hover="345">And.intro</span></code>, which has the type <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∧</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>.
+Replacing <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code> with concrete propositions, it is possible to prove <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∧</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="346">"Str"</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-String.append" data-verso-hover="9">append</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="347">"ing"</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="348">"String"</span></code> with <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-And.intro" data-verso-hover="345">And.intro</span><span class="inter-text"> </span><span class="const token" data-binding="const-rfl" data-verso-hover="334">rfl</span><span class="inter-text"> </span><span class="const token" data-binding="const-rfl" data-verso-hover="334">rfl</span></code>.
+Of course, <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">decide</span></code> is also powerful enough to find this proof:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.theorem-3950">theorem</span><span class="inter-text"> </span><span class="const token" data-binding="const-Connectives.addAndAppend" data-verso-hover="349">addAndAppend</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∧</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="346">"Str"</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-String.append" data-verso-hover="9">append</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="347">"ing"</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="348">"String"</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-7620123510968849936-4020-4022"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-4020" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7620123510968849936-4020-4022"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="inter-text">1</span><span class="const token" data-binding="const-HAdd.hAdd" data-verso-hover="341"> + </span><span class="inter-text">1</span><span class="const token" data-binding="const-Eq" data-verso-hover="342"> = </span><span class="inter-text">2</span><span class="const token" data-binding="const-And" data-verso-hover="350"> ∧ </span><span class="literal string token" data-binding="" data-verso-hover="346">"Str"</span><span class="inter-text">.</span><span class="const token" data-binding="const-String.append" data-verso-hover="9">append</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="347">"ing"</span><span class="const token" data-binding="const-Eq" data-verso-hover="342"> = </span><span class="literal string token" data-binding="" data-verso-hover="348">"String"</span></span></span></span></span></span><span class="tactic"><label for="tactic-state-7-4025-4031"><span class="inter-text">
+  </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-4025" data-verso-hover="343">decide</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-4025-4031"><span class="tactic-state">All goals completed! 🐙</span></span></code><p>
+                Similarly, “<code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> or <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>” (written <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∨</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>) has two constructors, because a proof of “<code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> or <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>” requires only that one of the two underlying propositions be true.
+There are two constructors: <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Or.inl" data-verso-hover="351">Or.inl</span></code>, with type <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∨</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>, and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Or.inr" data-verso-hover="352">Or.inr</span></code>, with type <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∨</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>.</p>
+              <p>
+                Implication (if <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> then <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>) is represented using functions.
+In particular, a function that transforms evidence for <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> into evidence for <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code> is itself evidence that <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> implies <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>.
+This is different from the usual description of implication, in which <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code> is shorthand for <code class="hl lean inline" data-lean-context="examples"><span class="unknown token" data-binding="">¬</span><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∨</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>, but the two formulations are equivalent.</p>
+              <p>
+                Because evidence for an “and” is a constructor, it can be used with pattern matching.
+For instance, a proof that <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code> implies <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> or <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code> is a function that pulls the evidence of <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> (or of <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>) out of the evidence for <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>, and then uses this evidence to produce evidence of <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span></code> or <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span></code>:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.theorem-4867">theorem</span><span class="inter-text"> </span><span class="const token" data-binding="const-Connectives.andImpliesOr" data-verso-hover="353">andImpliesOr</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∧</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5281" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∨</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5283" data-verso-hover="344">B</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.fun-4915">fun</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5290" data-verso-hover="354">andEvidence</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-4938" data-verso-hover="100">match</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5290" data-verso-hover="354">andEvidence</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.match-4938" data-verso-hover="100">with</span><span class="inter-text">
+</span><span class="inter-text">    </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-And.intro" data-verso-hover="345">And.intro</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5311" data-verso-hover="355">a</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5312" data-verso-hover="356">b</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=&gt;</span><span class="inter-text"> </span><span class="const token" data-binding="const-Or.inl" data-verso-hover="351">Or.inl</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5311" data-verso-hover="355">a</span></code><table class="tabular"><tr><th><p>
+                      Connective</p>
+                    </th><th><p>
+                      Lean Syntax</p>
+                    </th><th><p>
+                      Evidence
+</p>
+                    </th></tr><tr><td><p>
+                      True</p>
+                    </td><td><p>
+                      <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-True" data-verso-hover="357">True</span></code></p>
+                    </td><td><p>
+                      <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-True.intro" data-verso-hover="358">True.intro</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-True" data-verso-hover="357">True</span></code></p>
+                    </td></tr><tr><td><p>
+                      False</p>
+                    </td><td><p>
+                      <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-False" data-verso-hover="359">False</span></code></p>
+                    </td><td><p>
+                      No evidence</p>
+                    </td></tr><tr><td><p>
+                      <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2229" data-verso-hover="344">B</span></code></p>
+                    </td><td><p>
+                      <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∧</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2229" data-verso-hover="344">B</span></code></p>
+                    </td><td><p>
+                      <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-And.intro" data-verso-hover="345">And.intro</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2229" data-verso-hover="344">B</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∧</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2229" data-verso-hover="344">B</span></code></p>
+                    </td></tr><tr><td><p>
+                      <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span></code> or <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2229" data-verso-hover="344">B</span></code></p>
+                    </td><td><p>
+                      <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∨</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2229" data-verso-hover="344">B</span></code></p>
+                    </td><td><p>
+                      Either <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Or.inl" data-verso-hover="351">Or.inl</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∨</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2229" data-verso-hover="344">B</span></code> or <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Or.inr" data-verso-hover="352">Or.inr</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2229" data-verso-hover="344">B</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∨</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2229" data-verso-hover="344">B</span></code></p>
+                    </td></tr><tr><td><p>
+                      <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span></code> implies <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2229" data-verso-hover="344">B</span></code></p>
+                    </td><td><p>
+                      <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.2229" data-verso-hover="344">B</span></code></p>
+                    </td><td><p>
+                      A function that transforms evidence of <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span></code> into evidence of <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2229" data-verso-hover="344">B</span></code></p>
+                    </td></tr><tr><td><p>
+                      not <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span></code></p>
+                    </td><td><p>
+                      <code class="hl lean inline" data-lean-context="examples"><span class="unknown token" data-binding="">¬</span><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span></code></p>
+                    </td><td><p>
+                      A function that would transform evidence of <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.2227" data-verso-hover="344">A</span></code> into evidence of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-False" data-verso-hover="359">False</span></code></p>
+                    </td></tr></table><p>
+                The <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">decide</span></code> tactic can prove theorems that use these connectives.
+For example:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.theorem-2948">theorem</span><span class="inter-text"> </span><span class="const token" data-binding="const-Decide.onePlusOneAndLessThan" data-verso-hover="360">onePlusOneAndLessThan</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∨</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">3</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">5</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-15858434534412439194-3003-3005"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-3003" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-15858434534412439194-3003-3005"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="inter-text">1</span><span class="const token" data-binding="const-HAdd.hAdd" data-verso-hover="341"> + </span><span class="inter-text">1</span><span class="const token" data-binding="const-Eq" data-verso-hover="342"> = </span><span class="inter-text">2</span><span class="const token" data-binding="const-Or" data-verso-hover="361"> ∨ </span><span class="inter-text">3</span><span class="const token" data-binding="const-LT.lt" data-verso-hover="362"> &lt; </span><span class="inter-text">5</span></span></span></span></span></span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-7-3006-3012"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-3006" data-verso-hover="343">decide</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-3006-3012"><span class="tactic-state">All goals completed! 🐙</span></span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.theorem-3013">theorem</span><span class="inter-text"> </span><span class="const token" data-binding="const-Decide.notTwoEqualFive" data-verso-hover="363">notTwoEqualFive</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="unknown token" data-binding="">¬</span><span class="unknown token" data-binding="">(</span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">5</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-3188891128286668676-3056-3058"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-3056" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-3188891128286668676-3056-3058"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="const token" data-binding="const-Not" data-verso-hover="364">¬</span><span class="inter-text">1</span><span class="const token" data-binding="const-HAdd.hAdd" data-verso-hover="341"> + </span><span class="inter-text">1</span><span class="const token" data-binding="const-Eq" data-verso-hover="342"> = </span><span class="inter-text">5</span></span></span></span></span></span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-7-3059-3065"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-3059" data-verso-hover="343">decide</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-3059-3065"><span class="tactic-state">All goals completed! 🐙</span></span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.theorem-3066">theorem</span><span class="inter-text"> </span><span class="const token" data-binding="const-Decide.trueIsTrue" data-verso-hover="365">trueIsTrue</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-True" data-verso-hover="357">True</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-18227709649813847970-3095-3097"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-3095" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-18227709649813847970-3095-3097"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="const token" data-binding="const-True" data-verso-hover="357">True</span></span></span></span></span></span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-7-3098-3104"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-3098" data-verso-hover="343">decide</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-3098-3104"><span class="tactic-state">All goals completed! 🐙</span></span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.theorem-3105">theorem</span><span class="inter-text"> </span><span class="const token" data-binding="const-Decide.trueOrFalse" data-verso-hover="366">trueOrFalse</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-True" data-verso-hover="357">True</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∨</span><span class="inter-text"> </span><span class="const token" data-binding="const-False" data-verso-hover="359">False</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-5453225103602410079-3145-3147"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-3145" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-5453225103602410079-3145-3147"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="const token" data-binding="const-True" data-verso-hover="357">True</span><span class="const token" data-binding="const-Or" data-verso-hover="361"> ∨ </span><span class="const token" data-binding="const-False" data-verso-hover="359">False</span></span></span></span></span></span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-7-3148-3154"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-3148" data-verso-hover="343">decide</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-3148-3154"><span class="tactic-state">All goals completed! 🐙</span></span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.theorem-3155">theorem</span><span class="inter-text"> </span><span class="const token" data-binding="const-Decide.falseImpliesTrue" data-verso-hover="367">falseImpliesTrue</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-False" data-verso-hover="359">False</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-True" data-verso-hover="357">True</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-9372902580399993530-3200-3202"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-3200" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-9372902580399993530-3200-3202"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="const token" data-binding="const-False" data-verso-hover="359">False</span><span class="inter-text"> → </span><span class="const token" data-binding="const-True" data-verso-hover="357">True</span></span></span></span></span></span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-7-3203-3209"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-3203" data-verso-hover="343">decide</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-3203-3209"><span class="tactic-state">All goals completed! 🐙</span></span></code></section>
+            <section>
+              <h2 id="Functional-Programming-in-Lean--Interlude___-Propositions___-Proofs___-and-Indexing--Evidence-as-Arguments">
+                Evidence as Arguments</h2>
+              <p>
+                In some cases, safely indexing into a list requires that the list have some minimum size, but the list itself is a variable rather than a concrete value.
+For this lookup to be safe, there must be some evidence that the list is long enough.
+One of the easiest ways to make indexing safe is to have the function that performs a lookup into a data structure take the required evidence of safety as an argument.
+For instance, a function that returns the third entry in a list is not generally safe because lists might contain zero, one, or two entries:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-5591">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-third" data-verso-hover="368">third</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.5380" data-verso-hover="137">xs</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-List" data-verso-hover="111">List</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5377" data-verso-hover="369">α</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5377" data-verso-hover="369">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">failed to prove index is valid, possible solutions:
+  - Use `have`-expressions to prove the index is valid
+  - Use `a[i]!` notation instead, runtime check is performed, and 'Panic' error message is produced if index is not valid
+  - Use `a[i]?` notation instead, result is an `Option` type
+  - Use `a[i]'h` notation instead, where `h` is a proof that index is valid
+α : Type ?u.5379
+xs : List α
+⊢ 2 &lt; xs.length</code></span></span><span class="var token" data-binding="var-_uniq.5380" data-verso-hover="137">xs</span><span class="unknown token" data-binding="">[</span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="unknown token" data-binding="">]</span></span></code><div class="error">
+                <pre>failed to prove index is valid, possible solutions:
+  - Use `have`-expressions to prove the index is valid
+  - Use `a[i]!` notation instead, runtime check is performed, and 'Panic' error message is produced if index is not valid
+  - Use `a[i]?` notation instead, result is an `Option` type
+  - Use `a[i]'h` notation instead, where `h` is a proof that index is valid
+α : Type ?u.5379
+xs : List α
+⊢ 2 &lt; xs.length</pre></div>
+              <p>
+                However, the obligation to show that the list has at least three entries can be imposed on the caller by adding an argument that consists of evidence that the indexing operation is safe:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-5689">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-third" data-verso-hover="370">third</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.5691" data-verso-hover="137">xs</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-List" data-verso-hover="111">List</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5688" data-verso-hover="369">α</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.5721" data-verso-hover="371">ok</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5691" data-verso-hover="137">xs</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-List.length" data-verso-hover="140">length</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&gt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5688" data-verso-hover="369">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.5691" data-verso-hover="137">xs</span><span class="unknown token" data-binding="">[</span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="unknown token" data-binding="">]</span></code><p>
+                In this example, <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5691" data-verso-hover="137">xs</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-List.length" data-verso-hover="140">length</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&gt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">2</span></code> is not a program that checks <em>whether</em> <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5691" data-verso-hover="137">xs</span></code> has more than 2 entries.
+It is a proposition that could be true or false, and the argument <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.5721" data-verso-hover="371">ok</span></code> must be evidence that it is true.</p>
+              <p>
+                When the function is called on a concrete list, its length is known.
+In these cases, <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-6065" data-verso-hover="340">by</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-6068" data-verso-hover="343">decide</span></code> can construct the evidence automatically:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">"snail"</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-6035" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-third" data-verso-hover="370">third</span><span class="inter-text"> </span><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="tactic"><label for="tactic-state-13949831425330872153-6065-6067"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-6065" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-13949831425330872153-6065-6067"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span><span class="inter-text">.</span><span class="const token" data-binding="const-List.length" data-verso-hover="140">length</span><span class="const token" data-binding="const-GT.gt" data-verso-hover="372"> &gt; </span><span class="inter-text">2</span></span></span></span></span></span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-7-6068-6074"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-6068" data-verso-hover="343">decide</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-6068-6074"><span class="tactic-state">All goals completed! 🐙</span></span><span class="unknown token" data-binding="">)</span></code><div class="information">
+                <pre>"snail"</pre></div>
+              </section>
+            <section>
+              <h2 id="Functional-Programming-in-Lean--Interlude___-Propositions___-Proofs___-and-Indexing--Indexing-Without-Evidence">
+                Indexing Without Evidence</h2>
+              <p>
+                In cases where it's not practical to prove that an indexing operation is in bounds, there are other alternatives.
+Adding a question mark results in an <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Option" data-verso-hover="142">Option</span></code>, where the result is <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Option.some" data-verso-hover="373">some</span></code> if the index is in bounds, and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Option.none" data-verso-hover="374">none</span></code> otherwise.
+For example:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-6327">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-thirdOption" data-verso-hover="375">thirdOption</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.6085" data-verso-hover="137">xs</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-List" data-verso-hover="111">List</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.6082" data-verso-hover="369">α</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Option" data-verso-hover="142">Option</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.6082" data-verso-hover="369">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.6085" data-verso-hover="137">xs</span><span class="unknown token" data-binding="">[</span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="unknown token" data-binding="">]</span><span class="unknown token" data-binding="">?</span></code><code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">some "snail"</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-6631" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-thirdOption" data-verso-hover="375">thirdOption</span><span class="inter-text"> </span><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span></code><div class="information">
+                <pre>some "snail"</pre></div>
+              <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">none</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-6761" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-thirdOption" data-verso-hover="375">thirdOption</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="literal string token" data-binding="" data-verso-hover="376">"only"</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="377">"two"</span><span class="unknown token" data-binding="">]</span></code><div class="information">
+                <pre>none</pre></div>
+              <div class="paragraph">
+                <p>
+                  There is also a version that crashes the program when the index is out of bounds, rather than returning an <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Option" data-verso-hover="142">Option</span></code>:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">"deer"</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-6885" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span><span class="unknown token" data-binding="">[</span><span class="typed token" data-binding="" data-verso-hover="5">1</span><span class="unknown token" data-binding="">]</span><span class="unknown token" data-binding="">!</span></code><div class="information">
+                  <pre>"deer"</pre></div>
+                </div>
+              </section>
+            <section>
+              <h2 id="Functional-Programming-in-Lean--Interlude___-Propositions___-Proofs___-and-Indexing--Messages-You-May-Meet">
+                Messages You May Meet</h2>
+              <p>
+                In addition to proving that a statement is true, the <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-6265" data-verso-hover="343">decide</span></code> tactic can also prove that it is false.
+When asked to prove that a one-element list has more than two elements, it returns an error that indicates that the statement is indeed false:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-6238" data-verso-hover="7">#eval</span><span class="inter-text"> </span><span class="const token" data-binding="const-third" data-verso-hover="370">third</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="literal string token" data-binding="" data-verso-hover="378">"rabbit"</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="tactic"><label for="tactic-state-12176041741359708767-6262-6264"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-6262" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-12176041741359708767-6262-6264"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="const token" data-binding="const-List.cons" data-verso-hover="132">[</span><span class="literal string token" data-binding="" data-verso-hover="378">"rabbit"</span><span class="const token" data-binding="const-List.cons" data-verso-hover="132">]</span><span class="inter-text">.</span><span class="const token" data-binding="const-List.length" data-verso-hover="140">length</span><span class="const token" data-binding="const-GT.gt" data-verso-hover="372"> &gt; </span><span class="inter-text">2</span></span></span></span></span></span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">tactic 'decide' proved that the proposition
+  ["rabbit"].length &gt; 2
+is false</code></span></span><span class="tactic"><label for="tactic-state-12176041741359708767-6265-6271"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-6265" data-verso-hover="343">decide</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-12176041741359708767-6265-6271"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="const token" data-binding="const-List.cons" data-verso-hover="132">[</span><span class="literal string token" data-binding="" data-verso-hover="378">"rabbit"</span><span class="const token" data-binding="const-List.cons" data-verso-hover="132">]</span><span class="inter-text">.</span><span class="const token" data-binding="const-List.length" data-verso-hover="140">length</span><span class="const token" data-binding="const-GT.gt" data-verso-hover="372"> &gt; </span><span class="inter-text">2</span></span></span></span></span></span></span><span class="unknown token" data-binding="">)</span></code><div class="error">
+                <pre>tactic 'decide' proved that the proposition
+  ["rabbit"].length &gt; 2
+is false</pre></div>
+              <p>
+                The <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">simp</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">decide</span></code> tactics do not automatically unfold definitions with <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">def</span></code>.
+Attempting to prove <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Foo.OnePlusOneIsTwo" data-verso-hover="337">OnePlusOneIsTwo</span></code> using <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.simp-1497" data-verso-hover="379">simp</span></code> fails:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.theorem-1444">theorem</span><span class="inter-text"> </span><span class="const token" data-binding="const-Foo.onePlusOneIsStillTwo" data-verso-hover="380">onePlusOneIsStillTwo</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Foo.OnePlusOneIsTwo" data-verso-hover="337">OnePlusOneIsTwo</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-13447871481715737133-1494-1496"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-1494" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-13447871481715737133-1494-1496"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="const token" data-binding="const-Foo.OnePlusOneIsTwo" data-verso-hover="337">OnePlusOneIsTwo</span></span></span></span></span></span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">simp made no progress</code></span></span><span class="tactic"><label for="tactic-state-13447871481715737133-1497-1501"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.simp-1497" data-verso-hover="379">simp</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-13447871481715737133-1497-1501"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="const token" data-binding="const-Foo.OnePlusOneIsTwo" data-verso-hover="337">OnePlusOneIsTwo</span></span></span></span></span></span></span></code><p>
+                The error messages simply states that it could do nothing, because without unfolding <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Foo.OnePlusOneIsTwo" data-verso-hover="337">OnePlusOneIsTwo</span></code>, no progress can be made:</p>
+              <div class="error">
+                <pre>simp made no progress</pre></div>
+              <p>
+                Using <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-1820" data-verso-hover="343">decide</span></code> also fails:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.theorem-1767">theorem</span><span class="inter-text"> </span><span class="const token" data-binding="const-Foo.onePlusOneIsStillTwo" data-verso-hover="380">onePlusOneIsStillTwo</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Foo.OnePlusOneIsTwo" data-verso-hover="337">OnePlusOneIsTwo</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-13447871481715737133-1817-1819"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-1817" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-13447871481715737133-1817-1819"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="const token" data-binding="const-Foo.OnePlusOneIsTwo" data-verso-hover="337">OnePlusOneIsTwo</span></span></span></span></span></span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">failed to synthesize
+  Decidable OnePlusOneIsTwo
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</code></span></span><span class="tactic"><label for="tactic-state-13447871481715737133-1820-1826"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-1820" data-verso-hover="343">decide</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-13447871481715737133-1820-1826"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="const token" data-binding="const-Foo.OnePlusOneIsTwo" data-verso-hover="337">OnePlusOneIsTwo</span></span></span></span></span></span></span></code><p>
+                This is also due to it not unfolding <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Foo.OnePlusOneIsTwo" data-verso-hover="337">OnePlusOneIsTwo</span></code>:</p>
+              <div class="error">
+                <pre>failed to synthesize
+  Decidable OnePlusOneIsTwo
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</pre></div>
+              <p>
+                Defining <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Foo.OnePlusOneIsTwo" data-verso-hover="337">OnePlusOneIsTwo</span></code> with <a href="Getting-to-Know-Lean/Functions-and-Definitions/#abbrev-vs-def"><code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">abbrev</span></code> fixes the problem</a> by marking the definition for unfolding.</p>
+              <p>
+                In addition to the error that occurs when Lean is unable to find compile-time evidence that an indexing operation is safe, polymorphic functions that use unsafe indexing may produce the following message:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-7131">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-unsafeThird" data-verso-hover="381">unsafeThird</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.11510" data-verso-hover="137">xs</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-List" data-verso-hover="111">List</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.11507" data-verso-hover="369">α</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.11507" data-verso-hover="369">α</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">failed to synthesize
+  Inhabited α
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</code></span></span><span class="var token" data-binding="var-_uniq.11510" data-verso-hover="137">xs</span><span class="unknown token" data-binding="">[</span><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="unknown token" data-binding="">]</span><span class="unknown token" data-binding="">!</span></span></code><div class="error">
+                <pre>failed to synthesize
+  Inhabited α
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.</pre></div>
+              <p>
+                This is due to a technical restriction that is part of keeping Lean usable as both a logic for proving theorems and a programming language.
+In particular, only programs whose types contain at least one value are allowed to crash.
+This is because a proposition in Lean is a kind of type that classifies evidence of its truth.
+False propositions have no such evidence.
+If a program with an empty type could crash, then that crashing program could be used as a kind of fake evidence for a false proposition.</p>
+              <p>
+                Internally, Lean contains a table of types that are known to have at least one value.
+This error is saying that some arbitrary type <code class="hl lean inline" data-lean-context="examples"><span class="var token" data-binding="var-_uniq.11507" data-verso-hover="369">α</span></code> is not necessarily in that table.
+The next chapter describes how to add to this table, and how to successfully write functions like <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-unsafeThird" data-verso-hover="381">unsafeThird</span></code>.</p>
+              <p>
+                Adding whitespace between a list and the brackets used for lookup can cause another message:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-7324" data-verso-hover="7">#eval</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">function expected at
+  woodlandCritters
+term has type
+  List String</code></span></span><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="unknown token" data-binding="">1</span><span class="unknown token" data-binding="">]</span></span></code><div class="error">
+                <pre>function expected at
+  woodlandCritters
+term has type
+  List String</pre></div>
+              <p>
+                Adding a space causes Lean to treat the expression as a function application, and the index as a list that contains a single number.
+This error message results from having Lean attempt to treat <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-woodlandCritters" data-verso-hover="326">woodlandCritters</span></code> as a function.</p>
+              <section>
+                <h3 id="Functional-Programming-in-Lean--Interlude___-Propositions___-Proofs___-and-Indexing--Messages-You-May-Meet--Exercises">
+                  Exercises</h3>
+                <ul>
+                  <li>
+                    <p>
+                      Prove the following theorems using <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-rfl" data-verso-hover="334">rfl</span></code>: <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">3</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">5</span></code>, <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">15</span><span class="inter-text"> </span><span class="unknown token" data-binding="">-</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">8</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">7</span></code>, <code class="hl lean inline" data-lean-context="examples"><span class="literal string token" data-binding="" data-verso-hover="10">"Hello, "</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-String.append" data-verso-hover="9">append</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="31">"world"</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="382">"Hello, world"</span></code>. What happens if <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-rfl" data-verso-hover="334">rfl</span></code> is used to prove <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">5</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">18</span></code>? Why?</p>
+                    </li>
+                  <li>
+                    <p>
+                      Prove the following theorems using <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-7568" data-verso-hover="340">by</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-7571" data-verso-hover="343">decide</span></code>: <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">2</span><span class="inter-text"> </span><span class="unknown token" data-binding="">+</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">3</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">5</span></code>, <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">15</span><span class="inter-text"> </span><span class="unknown token" data-binding="">-</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">8</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">7</span></code>, <code class="hl lean inline" data-lean-context="examples"><span class="literal string token" data-binding="" data-verso-hover="10">"Hello, "</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-String.append" data-verso-hover="9">append</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="31">"world"</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="382">"Hello, world"</span></code>, <code class="hl lean inline" data-lean-context="examples"><span class="typed token" data-binding="" data-verso-hover="5">5</span><span class="inter-text"> </span><span class="unknown token" data-binding="">&lt;</span><span class="inter-text"> </span><span class="typed token" data-binding="" data-verso-hover="5">18</span></code>.</p>
+                    </li>
+                  <li>
+                    <p>
+                      Write a function that looks up the fifth entry in a list. Pass the evidence that this lookup is safe as an argument to the function.
+</p>
+                    </li>
+                  </ul>
+                </section>
+              </section>
+            </section>
+          <nav class="prev-next-buttons">
+            <a class="local-button active" href="Hello___-World___/Summary/#Functional-Programming-in-Lean--Hello___-World___--Summary" rel="prev" title="2.6. Summary"><span class="arrow">←</span><span class="where">2.6. Summary</span></a><a class="local-button active" href="Overloading-and-Type-Classes/#Functional-Programming-in-Lean--Overloading-and-Type-Classes" rel="next" title="3. Overloading and Type Classes"><span class="where">3. Overloading and Type Classes</span><span class="arrow">→</span></a></nav>
+          </div>
+        </main></div>
+    </body>
+  </html>
+

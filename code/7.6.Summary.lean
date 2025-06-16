@@ -1,0 +1,1 @@
+-- https://lean-lang.org/functional_programming_in_lean//Programming-with-Dependent-Types/Summary/#Functional-Programming-in-Lean--Programming-with-Dependent-Types--Summary

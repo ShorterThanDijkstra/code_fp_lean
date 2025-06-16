@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      (function(){
+  const {protocol:proto, host:hostName, pathname:path, search:srch, hash:hsh} = window.location;
+  if (!(path.endsWith("/") || path.endsWith(".html"))) {
+    window.location.replace(`${proto}//${hostName}${path}/${srch}${hsh}`);
+  }
+})()</script>
+    <base href="./../../"><meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>Structures and Inheritance</title><link rel="stylesheet" href="book.css">
+    <script>
+      const __versoSiteRoot = document.baseURI;</script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
+    <script src="-verso-data/katex/katex.js"></script>
+    <script src="-verso-data/katex/math.js"></script>
+    <script src="-verso-data/popper.js"></script>
+    <script src="-verso-data/tippy.js"></script>
+    <link rel="stylesheet" href="static/theme.css">
+    <link rel="stylesheet" href="static/fonts/source-serif/source-serif-text.css">
+    <link rel="stylesheet" href="static/fonts/source-code-pro/source-code-pro.css">
+    <link rel="stylesheet" href="static/fonts/source-sans/source-sans-3.css">
+    <link rel="stylesheet" href="static/fonts/noto-sans-mono/noto-sans-mono.css">
+    <link rel="stylesheet" href="-verso-data/katex/katex.css">
+    <link rel="stylesheet" href="-verso-data/tippy-border.css">
+    <style>
+div.paragraph > .eval-steps:not(:first-child), div.paragraph > .eval-steps:not(:first-child) > * {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .eval-steps:not(:last-child), div.paragraph > .eval-steps:not(:last-child) > * {
+  margin-bottom: 0.5rem;
+}
+
+.eval-steps .hl.lean.block {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+</style><style>
+.shell-command {
+
+}
+.shell-command.inline > * {
+  display: inline;
+  white-space: pre;
+}
+.shell-command.inline .command::before {
+  content: "$ ";
+  font-weight: 600;
+}
+</style><style>
+.shell-command {
+
+}
+.shell-command.block > * {
+  display: block;
+  white-space: pre;
+}
+.shell-command .command .prompt {
+  font-weight: 600;
+}
+
+div.paragraph > .shell-command:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .shell-command:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style><style>
+
+.hl.lean {
+  white-space: pre;
+  font-weight: normal;
+  font-style: normal;
+}
+
+.hl.lean .keyword {
+  font-weight : bold;
+}
+
+.hl.lean .var {
+  font-style: italic;
+  position: relative;
+}
+
+.hover-container {
+  width: 0;
+  height: 0;
+  position: relative;
+  display: inline;
+}
+
+.hl.lean a {
+  color: inherit;
+  text-decoration: currentcolor underline dotted;
+}
+
+.hl.lean a:hover {
+  text-decoration: currentcolor underline solid;
+}
+
+.hl.lean .hover-info {
+  white-space: normal;
+}
+
+.hl.lean .token .hover-info {
+  display: none;
+  position: absolute;
+  background-color: #e5e5e5;
+  border: 1px solid black;
+  padding: 0.5rem;
+  z-index: 300;
+  font-size: inherit;
+}
+
+.hl.lean .hover-info.messages {
+  max-height: 10rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  padding: 0 0.5rem 0 0;
+  display: block;
+}
+
+.hl.lean .hover-info code {
+  white-space: pre-wrap;
+}
+
+.hl.lean .hover-info.messages > code {
+  padding: 0.5rem;
+  display: block;
+  width: fit-content;
+}
+
+.hl.lean .hover-info.messages > code:only-child {
+  margin: 0;
+}
+
+.hl.lean .hover-info.messages > code {
+  margin: 0.1rem;
+}
+
+.hl.lean .hover-info.messages > code:not(:first-child) {
+  margin-top: 0rem;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .has-info:hover > .hover-container > .hover-info:not(.tactic *),
+  .hl.lean .tactic:has(> .tactic-toggle:checked) .has-info:hover > .hover-container > .hover-info,
+  .hl.lean .token:hover > .hover-container > .hover-info:not(.has-info *):not(.tactic *),
+  .hl.lean .tactic:has(> .tactic-toggle:checked) .token:hover > .hover-container > .hover-info:not(.has-info *) {
+    display: inline-block;
+    position: absolute;
+    top: 1rem;
+    font-weight: normal;
+    font-style: normal;
+    width: min-content;
+  }
+}
+*/
+
+.hl.lean.block {
+  display: block;
+}
+
+.hl.lean.inline {
+  display: inline;
+  white-space: pre-wrap;
+}
+
+.hl.lean .token {
+  transition: all 0.25s; /* Slight fade for highlights */
+}
+
+@media (hover: hover) {
+  .hl.lean .token.binding-hl, .hl.lean .literal.string:hover, .hl.lean .token.typed:hover {
+    background-color: #eee;
+    border-radius: 2px;
+    transition: none;
+  }
+}
+
+
+.hl.lean .has-info .token:not(.tactic-state):not(.tactic-state *), .hl.lean .has-info .inter-text:not(.tactic-state):not(.tactic-state *) {
+  text-decoration-style: wavy;
+  text-decoration-line: underline;
+  text-decoration-thickness: from-font;
+}
+
+.hl.lean .has-info .hover-info {
+  display: none;
+  position: absolute;
+  transform: translate(0.25rem, 0.3rem);
+  border: 1px solid black;
+  padding: 0.5rem;
+  z-index: 400;
+  text-align: left;
+}
+
+.hl.lean .has-info.error :not(.tactic-state):not(.tactic-state *){
+  text-decoration-color: red;
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.error:hover {
+    background-color: #ffb3b3;
+  }
+}
+
+.hl.lean .hover-info.messages > code.error {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid #ffb3b3;
+}
+
+.tippy-box[data-theme~='error'] .hl.lean .hover-info.messages > code.error {
+  background: none;
+  border: none;
+}
+
+.error pre {
+    color: red;
+}
+
+.hl.lean .has-info.warning :not(.tactic-state):not(.tactic-state *) {
+  text-decoration-color: var(--verso-warning-color);
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.warning:hover {
+    background-color:var(--verso-warning-color);
+  }
+}
+
+.hl.lean .hover-info.messages > code.warning {
+  background-color: var(--verso-warning-color);
+}
+
+.hl.lean .hover-info.messages > code.error {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid var(--verso-warning-color);
+}
+
+.tippy-box[data-theme~='warning'] .hl.lean .hover-info.messages > code.warning {
+  background: none;
+  border: none;
+}
+
+
+.hl.lean .has-info.info :not(.tactic-state):not(.tactic-state *) {
+  text-decoration-color: blue;
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.info:hover {
+    background-color: #4777ff;
+  }
+}
+
+
+.hl.lean .hover-info.messages > code.info {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid #4777ff;
+}
+
+.tippy-box[data-theme~='info'] .hl.lean .hover-info.messages > code.info {
+  background: none;
+  border: none;
+}
+
+.hl.lean div.docstring {
+  font-family: sans-serif;
+  white-space: normal;
+  max-width: 40rem;
+  width: max-content;
+}
+
+.hl.lean div.docstring > :last-child {
+  margin-bottom: 0;
+}
+
+.hl.lean div.docstring > :first-child {
+  margin-top: 0;
+}
+
+.hl.lean .hover-info .sep {
+  display: block;
+  width: auto;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding: 0;
+  height: 1px;
+  border-top: 1px solid #ccc;
+}
+
+.hl.lean code {
+  font-family: monospace;
+}
+
+.hl.lean .tactic-state {
+  display: none;
+  position: relative;
+  left: 2rem;
+  width: fit-content;
+  border: 1px solid #888888;
+  border-radius: 0.1rem;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  background-color: #ffffff;
+  z-index: 200;
+}
+
+.hl.lean.popup .tactic-state {
+  position: static;
+  display: block;
+  width: auto;
+  border: none;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  background-color: #ffffff;
+}
+
+
+.hl.lean .tactic {
+  position: relative;
+}
+
+.hl.lean .tactic-toggle:checked ~ .tactic-state {
+  display: block;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .tactic:hover > .tactic-toggle:not(:checked) ~ .tactic-state {
+    display: block;
+    position: absolute;
+    left: 0;
+    transform: translate(0.25rem, 0);
+    z-index: 250;
+  }
+}
+*/
+
+.hl.lean .tactic > label {
+  position: relative;
+  transition: all 0.5s;
+}
+
+@media (hover: hover) {
+  .hl.lean .tactic > label:hover {
+    border-bottom: 1px dotted #bbbbbb;
+  }
+}
+
+.hl.lean .tactic-toggle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  z-index: -10;
+}
+
+.hl.lean .tactic > label::after {
+  content: "";
+  border: 1px solid #bbbbbb;
+  border-radius: 1rem;
+  height: 0.25rem;
+  vertical-align: middle;
+  width: 0.6rem;
+  margin-left: 0.1rem;
+  margin-right: 0.1rem;
+  display: inline-block;
+  transition: all 0.5s;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .tactic > label:hover::after {
+    border: 1px solid #aaaaaa;
+    background-color: #aaaaaa;
+    transition: all 0.5s;
+  }
+}
+*/
+
+.hl.lean .tactic > label:has(+ .tactic-toggle:checked)::after {
+  border: 1px solid #999999;
+  background-color: #999999;
+  transition: all 0.5s;
+}
+
+.hl.lean .tactic-state .goal + .goal {
+  margin-top: 1.5rem;
+}
+
+.hl.lean .tactic-state summary {
+  margin-left: -0.5rem;
+}
+
+.hl.lean .tactic-state details {
+  padding-left: 0.5rem;
+}
+
+.hl.lean .case-label {
+  display: block;
+  position: relative;
+}
+
+.hl.lean .case-label input[type="checkbox"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  z-index: -10;
+}
+
+.hl.lean .case-label:has(input[type="checkbox"])::before {
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+  background-color: black;
+  content: ' ';
+  transition: ease 0.2s;
+  margin-right: 0.7rem;
+  clip-path: polygon(100% 0, 0 0, 50% 100%);
+  width: 0.6rem;
+  height: 0.6rem;
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]:not(:checked))::before {
+  transform: rotate(-90deg);
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]) {
+
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]:checked) {
+
+}
+
+
+.hl.lean .tactic-state .labeled-case > :not(:first-child) {
+  max-height: 0px;
+  display: block;
+  overflow: hidden;
+  transition: max-height 0.1s ease-in;
+  margin-left: 0.5rem;
+  margin-top: 0.1rem;
+}
+
+.hl.lean .labeled-case:has(.case-label input[type="checkbox"]:checked) > :not(:first-child) {
+  max-height: 100%;
+}
+
+
+.hl.lean .tactic-state .goal-name::before {
+  font-style: normal;
+  content: "case ";
+}
+
+.hl.lean .tactic-state .goal-name {
+  font-style: italic;
+  font-family: monospace;
+}
+
+.hl.lean .tactic-state .hypotheses {
+  display: table;
+}
+
+.hl.lean .tactic-state .hypothesis {
+  display: table-row;
+}
+
+.hl.lean .tactic-state .hypothesis > * {
+  display: table-cell;
+}
+
+
+.hl.lean .tactic-state .hypotheses .colon {
+  text-align: center;
+  min-width: 1rem;
+}
+
+.hl.lean .tactic-state .hypotheses .name {
+  text-align: right;
+}
+
+.hl.lean .tactic-state .hypotheses .name,
+.hl.lean .tactic-state .hypotheses .type,
+.hl.lean .tactic-state .conclusion .type {
+  font-family: monospace;
+}
+
+.tippy-box[data-theme~='lean'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 1px solid black;
+}
+.tippy-box[data-theme~='lean'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: #e5e5e5;
+}
+
+.tippy-box[data-theme~='message'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #e5e5e5;
+  border-width: 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='top'] > .tippy-arrow::after {
+  bottom: -11px;
+  border-width: 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-width: 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='bottom'] > .tippy-arrow::after {
+  top: -11px;
+  border-width: 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: #e5e5e5;
+  border-width: 11px 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='left'] > .tippy-arrow::after {
+  right: -11px;
+  border-width: 11px 0 11px 11px;
+}
+
+.tippy-box[data-theme~='message'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: #e5e5e5;
+  border-width: 11px 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='right'] > .tippy-arrow::after {
+  left: -11px;
+  border-width: 11px 11px 11px 0;
+}
+
+
+
+.tippy-box[data-theme~='warning'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid var(--verso-warning-color);
+}
+
+.tippy-box[data-theme~='error'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid #f7a7af;
+}
+
+.tippy-box[data-theme~='info'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid #99b3c2;
+}
+
+.tippy-box[data-theme~='tactic'] {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: white;
+}
+
+</style><style>
+.example-file {
+  white-space: normal;
+  font-family: var(--verso-structure-font-family);
+  margin: 1rem;
+  width: fit-content;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+
+  /* These are necessary for the container to behave nicely on mobile */
+  overflow-x: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.example-file::before {
+  counter-reset: linenumber;
+}
+.example-file > .line {
+  display: block;
+  white-space: pre;
+  counter-increment: linenumber;
+  font-family: var(--verso-code-font-family);
+}
+.example-file > .line::before {
+  -webkit-user-select: none;
+  display: inline-block;
+  content: counter(linenumber);
+  border-right: 1px solid #ddd;
+  width: 2em;
+  padding-right: 0.25em;
+  margin-right: 0.25em;
+  font-family: var(--verso-code-font-family);
+  text-align: right;
+}
+.example-file > .line::after {
+  -webkit-user-select: none;
+  display: inline-block;
+  content: "⏎";
+  opacity: 0;
+}
+.example-file > .line:hover::after {
+  opacity: 1;
+}
+.example-file > .line:hover, .example-file > .line:hover::before {
+  background-color: #eee;
+}
+.example-file > .empty {
+  display: block;
+  white-space: pre;
+  font-family: var(--verso-code-font-family);
+  font-style: italic;
+}
+.example-file > .empty::before {
+  -webkit-user-select: none;
+  display: inline-block;
+  content: "";
+  border-right: 1px solid #ddd;
+  width: 2em;
+  padding-right: 0.25em;
+  margin-right: 0.25em;
+  font-family: var(--verso-code-font-family);
+  text-align: right;
+}
+</style><style>
+table.tabular {
+  margin: auto;
+  border-spacing: 1rem;
+}
+table.tabular.left-align {
+  margin-right: auto;
+  margin-left: 0;
+}
+table.tabular.center-align {
+  margin: auto;
+}
+table.tabular.right-align {
+  margin-left auto;
+  margin-right: 0;
+}
+table.tabular td, table.tabular th {
+  text-align: left;
+  vertical-align: top;
+}
+table.tabular td > p:first-child, table.tabular th > p:first-child {
+  margin-top: 0;
+}
+table.tabular td > p:last-child, table.tabular th > p:first-child {
+  margin-bottom: 0;
+}
+</style><style>
+.shell-commands {
+
+}
+.shell-commands > * {
+  display: block;
+  white-space: pre;
+}
+.shell-commands .command::before {
+  content: "$ ";
+  font-weight: 600;
+}
+
+div.paragraph > .shell-commands:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .shell-commands:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style><style>
+.eq-steps .hl.lean.block {
+  background-color: #f6f7f6;
+  padding: 1rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+.eq-steps .reason {
+  font-style: italic;
+  margin-left: 2.5em;
+  display: flex;
+}
+.eq-steps .reason::before {
+  content: "={";
+  font-family: var(--verso-code-font-family);
+  font-style: normal;
+  font-weight: 600;
+  margin-right: 0.5em;
+  align-self: center;
+}
+.eq-steps .reason > p {
+  margin: 0;
+  max-width: 25em;
+  align-self: center;
+}
+.eq-steps .reason::after {
+  content: "}=";
+  font-family: var(--verso-code-font-family);
+  font-style: normal;
+  font-weight: 600;
+  margin-left: 1em;
+  align-self: center;
+}
+</style><style>
+div.paragraph > .eq-steps:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+div.paragraph > .eq-steps:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style><script>
+      
+window.onload = () => {
+
+    // Don't show hovers inside of closed tactic states
+    function blockedByTactic(elem) {
+      let parent = elem.parentNode;
+      while (parent && "classList" in parent) {
+        if (parent.classList.contains("tactic")) {
+          const toggle = parent.querySelector("input.tactic-toggle");
+          if (toggle) {
+            return !toggle.checked;
+          }
+        }
+        parent = parent.parentNode;
+      }
+      return false;
+    }
+
+    function blockedByTippy(elem) {
+      // Don't show a new hover until the old ones are all closed.
+      // Scoped to the nearest "top-level block" to avoid being O(n) in the size of the document.
+      var block = elem;
+      const topLevel = new Set(["section", "body", "html", "nav", "header"]);
+      while (block.parentNode && !topLevel.has(block.parentNode.nodeName.toLowerCase())) {
+        block = block.parentNode;
+      }
+      for (const child of block.querySelectorAll(".token, .has-info")) {
+        if (child._tippy && child._tippy.state.isVisible) { return true };
+      }
+      return false;
+    }
+
+    for (const c of document.querySelectorAll(".hl.lean .token")) {
+        if (c.dataset.binding != "") {
+            c.addEventListener("mouseover", (event) => {
+                if (blockedByTactic(c)) {return;}
+                const context = c.closest(".hl.lean").dataset.leanContext;
+                for (const example of document.querySelectorAll(".hl.lean")) {
+                    if (example.dataset.leanContext == context) {
+                        for (const tok of example.querySelectorAll(".token")) {
+                            if (c.dataset.binding == tok.dataset.binding) {
+                                tok.classList.add("binding-hl");
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        c.addEventListener("mouseout", (event) => {
+            for (const tok of document.querySelectorAll(".hl.lean .token")) {
+                tok.classList.remove("binding-hl");
+            }
+        });
+    }
+    /* Render docstrings */
+    if ('undefined' !== typeof marked) {
+        for (const d of document.querySelectorAll("code.docstring, pre.docstring")) {
+            const str = d.innerText;
+            const html = marked.parse(str);
+            const rendered = document.createElement("div");
+            rendered.classList.add("docstring");
+            rendered.innerHTML = html;
+            d.parentNode.replaceChild(rendered, d);
+        }
+    }
+    // Add hovers
+    let siteRoot = typeof __versoSiteRoot !== 'undefined' ? __versoSiteRoot : "/";
+    let docsJson = siteRoot + "-verso-docs.json";
+    fetch(docsJson).then((resp) => resp.json()).then((versoDocData) => {
+
+      function hideParentTooltips(element) {
+        let parent = element.parentElement;
+        while (parent) {
+          const tippyInstance = parent._tippy;
+          if (tippyInstance) {
+            tippyInstance.hide();
+          }
+          parent = parent.parentElement;
+        }
+      }
+
+
+
+      const defaultTippyProps = {
+        /* DEBUG -- remove the space: * /
+        onHide(any) { return false; },
+        trigger: "click",
+        // */
+        /* theme: "lean", */
+        maxWidth: "none",
+        appendTo: () => document.body,
+        interactive: true,
+        delay: [100, null],
+        /* ignoreAttributes: true, */
+        followCursor: 'initial',
+        onShow(inst) {
+          if (inst.reference.className == 'tactic') {
+
+            const toggle = inst.reference.querySelector("input.tactic-toggle");
+            if (toggle && toggle.checked) {
+              return false;
+            }
+            hideParentTooltips(inst.reference);
+            //if (blockedByTippy(inst.reference)) { return false; }
+
+          } else if (inst.reference.querySelector(".hover-info") || "versoHover" in inst.reference.dataset) {
+            if (blockedByTactic(inst.reference)) { return false };
+            if (blockedByTippy(inst.reference)) { return false; }
+          } else { // Nothing to show here!
+            return false;
+          }
+        },
+        content (tgt) {
+          const content = document.createElement("span");
+          if (tgt.className == 'tactic') {
+            const state = tgt.querySelector(".tactic-state").cloneNode(true);
+            state.style.display = "block";
+            content.appendChild(state);
+            content.style.display = "block";
+            content.className = "hl lean popup";
+          } else {
+            content.className = "hl lean";
+            content.style.display = "block";
+            content.style.maxHeight = "300px";
+            content.style.overflowY = "auto";
+            content.style.overflowX = "hidden";
+            const hoverId = tgt.dataset.versoHover;
+            const hoverInfo = tgt.querySelector(".hover-info");
+            if (hoverId) { // Docstrings from the table
+              // TODO stop doing an implicit conversion from string to number here
+              let data = versoDocData[hoverId];
+              if (data) {
+                const info = document.createElement("span");
+                info.className = "hover-info";
+                info.style.display = "block";
+                info.innerHTML = data;
+                content.appendChild(info);
+                /* Render docstrings - TODO server-side */
+                if ('undefined' !== typeof marked) {
+                    for (const d of content.querySelectorAll("code.docstring, pre.docstring")) {
+                        const str = d.innerText;
+                        const html = marked.parse(str);
+                        const rendered = document.createElement("div");
+                        rendered.classList.add("docstring");
+                        rendered.innerHTML = html;
+                        d.parentNode.replaceChild(rendered, d);
+                    }
+                }
+              } else {
+                content.innerHTML = "Failed to load doc ID: " + hoverId;
+              }
+            } else if (hoverInfo) { // The inline info, still used for compiler messages
+              content.appendChild(hoverInfo.cloneNode(true));
+            }
+          }
+          return content;
+        }
+      };
+
+
+
+      const addTippy = (selector, props) => {
+        tippy(selector, Object.assign({}, defaultTippyProps, props));
+      };
+      document.querySelectorAll('.hl.lean .const.token, .hl.lean .keyword.token, .hl.lean .literal.token, .hl.lean .option.token, .hl.lean .var.token, .hl.lean .typed.token').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'lean');
+      });
+      document.querySelectorAll('.hl.lean .has-info.warning').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'warning message');
+      });
+      document.querySelectorAll('.hl.lean .has-info.info').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'info message');
+      });
+      document.querySelectorAll('.hl.lean .has-info.error').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'error message');
+      });
+      document.querySelectorAll('.hl.lean .tactic').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'tactic');
+      });
+      let insts = tippy('.hl.lean .const.token, .hl.lean .keyword.token, .hl.lean .literal.token, .hl.lean .option.token, .hl.lean .var.token, .hl.lean .typed.token, .hl.lean .has-info, .hl.lean .tactic', defaultTippyProps);
+
+
+
+      /*
+      tippy('.hl.lean .tactic', {
+        allowHtml: true,
+
+        onHide(any) { return false; },
+        trigger: "click",
+
+        maxWidth: "none",
+        onShow(inst) {
+          const toggle = inst.reference.querySelector("input.tactic-toggle");
+          if (toggle && toggle.checked) {
+            return false;
+          }
+          if (blockedByTippy(inst.reference)) { return false; }
+        },
+        content (tgt) {
+          const content = document.createElement("span");
+          const state = tgt.querySelector(".tactic-state").cloneNode(true);
+          state.style.display = "block";
+          content.appendChild(state);
+          content.style.display = "block";
+          content.className = "hl lean popup";
+          return content;
+        }
+      });
+      */
+  });
+}
+</script>
+    </head>
+  <body>
+    <header>
+      <div class="header-logo-wrapper">
+        <a href="" id="logo"><img src="static/lean_logo.svg"></a></div>
+      <div class="header-title-wrapper">
+        <a href="" class="header-title"><h1>
+            Functional Programming in Lean</h1>
+          </a></div>
+      </header>
+    <label for="toggle-toc" id="toggle-toc-click"><span class="line line1"></span><span class="line line2"></span><span class="line line3"></span></label><div class="with-toc">
+      <div class="toc-backdrop" onclick="document.getElementById('toggle-toc-click')?.click()"></div>
+      <nav id="toc">
+        <input type="checkbox" id="toggle-toc"><div class="first">
+          <a href="" class="toc-title"><h1>
+              Functional Programming in Lean</h1>
+            </a><div class="split-tocs">
+            <div class="split-toc book">
+              <div class="title">
+                <label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot"></label><span class="">Table of Contents</span></div>
+              <table><tr class="unnumbered"><td class="num"><td><a href="Introduction/#Functional-Programming-in-Lean--Introduction">Introduction</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Acknowledgments/#Functional-Programming-in-Lean--Acknowledgments">Acknowledgments</a></td></tr><tr class="numbered"><td class="num">1.</td><td><a href="Getting-to-Know-Lean/#getting-to-know">Getting to Know Lean</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Hello___-World___/#hello-world">Hello, World!</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Propositions___-Proofs___-and-Indexing/#props-proofs-indexing">Interlude: Propositions, Proofs, and Indexing</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="Overloading-and-Type-Classes/#Functional-Programming-in-Lean--Overloading-and-Type-Classes">Overloading and Type Classes</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="Monads/#Functional-Programming-in-Lean--Monads">Monads</a></td></tr><tr class="current numbered"><td class="num">5.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads">Functors, Applicative Functors, and Monads</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Monad-Transformers/#Functional-Programming-in-Lean--Monad-Transformers">Monad Transformers</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Programming-with-Dependent-Types/#Functional-Programming-in-Lean--Programming-with-Dependent-Types">Programming with Dependent Types</a></td></tr><tr class="unnumbered"><td class="num"><td><a href="Interlude___-Tactics___-Induction___-and-Proofs/#Functional-Programming-in-Lean--Interlude___-Tactics___-Induction___-and-Proofs">Interlude: Tactics, Induction, and Proofs</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Programming___-Proving___-and-Performance/#Functional-Programming-in-Lean--Programming___-Proving___-and-Performance">Programming, Proving, and Performance</a></td></tr><tr class="numbered"><td class="num">9.</td><td><a href="Next-Steps/#next-steps">Next Steps</a></td></tr></table></div>
+            <div class="split-toc">
+              <div class="title">
+                <label for="--verso-manual-toc-Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads" checked="checked"></label><span class="number">5.</span> <span class=""><a href="Functors___-Applicative-Functors___-and-Monads/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads">Functors, Applicative Functors, and Monads</a></span></div>
+              <table><tr class="current numbered"><td class="num">5.1.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/Structures-and-Inheritance/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Structures-and-Inheritance">Structures and Inheritance</a></td></tr><tr class="numbered"><td class="num">5.2.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/Applicative-Functors/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Applicative-Functors">Applicative Functors</a></td></tr><tr class="numbered"><td class="num">5.3.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/The-Applicative-Contract/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--The-Applicative-Contract">The Applicative Contract</a></td></tr><tr class="numbered"><td class="num">5.4.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/Alternatives/#alternative">Alternatives</a></td></tr><tr class="numbered"><td class="num">5.5.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/Universes/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Universes">Universes</a></td></tr><tr class="numbered"><td class="num">5.6.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/The-Complete-Definitions/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--The-Complete-Definitions">The Complete Definitions</a></td></tr><tr class="numbered"><td class="num">5.7.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/Summary/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Summary">Summary</a></td></tr></table></div>
+            <div class="split-toc">
+              <div class="title">
+                <label for="--verso-manual-toc-Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Structures-and-Inheritance" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Structures-and-Inheritance" checked="checked"></label><span class="number">5.1.</span> <span class="current"><a href="Functors___-Applicative-Functors___-and-Monads/Structures-and-Inheritance/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Structures-and-Inheritance">Structures and Inheritance</a></span></div>
+              <table><tr class="numbered"><td class="num">5.1.1.</td><td><a href="Functors___-Applicative-Functors___-and-Monads/Structures-and-Inheritance/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Structures-and-Inheritance--Multiple-Inheritance">Multiple Inheritance</a></td></tr></table></div>
+            </div>
+          </div>
+        <div class="last">
+          <ul id="meta-links">
+            <li>
+              <a href="https://github.com/leanprover/fp-lean">Source Code</a></li>
+            <li>
+              <a href="https://github.com/leanprover/fp-lean/issues">Report Issues</a></li>
+            </ul>
+          </div>
+        </nav>
+      <main><div class="content-wrapper">
+          <nav class="prev-next-buttons">
+            <a class="local-button active" href="Functors___-Applicative-Functors___-and-Monads/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads" rel="prev" title="5. Functors, Applicative Functors, and Monads"><span class="arrow">←</span><span class="where">5. Functors, Applicative Functors, and Monads</span></a><a class="local-button active" href="Functors___-Applicative-Functors___-and-Monads/Applicative-Functors/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Applicative-Functors" rel="next" title="5.2. Applicative Functors"><span class="where">5.2. Applicative Functors</span><span class="arrow">→</span></a></nav>
+          <section>
+            <h1>
+              5.1. Structures and Inheritance</h1>
+            <p>
+              In order to understand the full definitions of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Functor" data-verso-hover="570">Functor</span></code>, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Applicative" data-verso-hover="1008">Applicative</span></code>, and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monad" data-verso-hover="724">Monad</span></code>, another Lean feature is necessary: structure inheritance.
+Structure inheritance allows one structure type to provide the interface of another, along with additional fields.
+This can be useful when modeling concepts that have a clear taxonomic relationship.
+For example, take a model of mythical creatures.
+Some of them are large, and some are small:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.structureTk-105">structure</span><span class="inter-text"> </span><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-132">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1010">large</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Bool" data-verso-hover="40">Bool</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-null-153">deriving</span><span class="inter-text"> </span><span class="const token" data-binding="const-Repr" data-verso-hover="64">Repr</span></code><p>
+              Behind the scenes, defining the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span></code> structure creates an inductive type with a single constructor called <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature.mk" data-verso-hover="1011">mk</span></code>:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">MythicalCreature.mk (large : Bool) : MythicalCreature</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.check-562">#check</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-MythicalCreature.mk" data-verso-hover="1011">MythicalCreature.mk</span></code><div class="information">
+              <pre>MythicalCreature.mk (large : Bool) : MythicalCreature</pre></div>
+            <p>
+              Similarly, a function <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1010">MythicalCreature.large</span></code> is created that actually extracts the field from the constructor:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">MythicalCreature.large (self : MythicalCreature) : Bool</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.check-741">#check</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1010">MythicalCreature.large</span></code><div class="information">
+              <pre>MythicalCreature.large (self : MythicalCreature) : Bool</pre></div>
+            <p>
+              In most old stories, each monster can be defeated in some way.
+A description of a monster should include this information, along with whether it is large:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.structureTk-337">structure</span><span class="inter-text"> </span><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.extends-355">extends</span><span class="inter-text"> </span><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-380">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Monster.vulnerability" data-verso-hover="1013">vulnerability</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-null-411">deriving</span><span class="inter-text"> </span><span class="const token" data-binding="const-Repr" data-verso-hover="64">Repr</span></code><p>
+              The <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.extends-355">extends</span><span class="inter-text"> </span><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span></code> in the heading states that every monster is also mythical.
+To define a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span></code>, both the fields from <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span></code> and the fields from <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span></code> should be provided.
+A troll is a large monster that is vulnerable to sunlight:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-1284">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-troll" data-verso-hover="1014">troll</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-1304">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1015">large</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Bool.true" data-verso-hover="97">true</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Monster.vulnerability" data-verso-hover="465">vulnerability</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1016">"sunlight"</span></code><p>
+              Behind the scenes, inheritance is implemented using composition.
+The constructor <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monster.mk" data-verso-hover="1017">Monster.mk</span></code> takes a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span></code> as its argument:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">Monster.mk (toMythicalCreature : MythicalCreature) (vulnerability : String) : Monster</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.check-945">#check</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-Monster.mk" data-verso-hover="1017">Monster.mk</span></code><div class="information">
+              <pre>Monster.mk (toMythicalCreature : MythicalCreature) (vulnerability : String) : Monster</pre></div>
+            <p>
+              In addition to defining functions to extract the value of each new field, a function <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monster.toMythicalCreature" data-verso-hover="1018">Monster.toMythicalCreature</span></code> is defined with type <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span><span class="inter-text"> </span><span class="unknown token" data-binding="">→</span><span class="inter-text"> </span><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span></code>.
+This can be used to extract the underlying creature.</p>
+            <p>
+              Moving up the inheritance hierarchy in Lean is not the same thing as upcasting in object-oriented languages.
+An upcast operator causes a value from a derived class to be treated as an instance of the parent class, but the value retains its identity and structure.
+In Lean, however, moving up the inheritance hierarchy actually erases the underlying information.
+To see this in action, consider the result of evaluating <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-troll" data-verso-hover="1014">troll</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-Monster.toMythicalCreature" data-verso-hover="1018">toMythicalCreature</span></code>:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">{ large := true }</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-1611" data-verso-hover="7">#eval</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-troll" data-verso-hover="1014">troll</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-Monster.toMythicalCreature" data-verso-hover="1018">toMythicalCreature</span></code><div class="information">
+              <pre>{ large := true }</pre></div>
+            <p>
+              Only the fields of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span></code> remain.</p>
+            <p>
+              Just like the <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">where</span></code> syntax, curly-brace notation with field names also works with structure inheritance:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-1708">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Blurble.troll" data-verso-hover="1014">troll</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1015">large</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Bool.true" data-verso-hover="97">true</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="const token" data-binding="const-Monster.vulnerability" data-verso-hover="465">vulnerability</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1016">"sunlight"</span><span class="unknown token" data-binding="">}</span></code><p>
+              However, the anonymous angle-bracket notation that delegates to the underlying constructor reveals the internal details:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-2027">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Foo.troll" data-verso-hover="1014">troll</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="unknown token" data-binding="const-Monster.mk" data-verso-hover="1017">⟨</span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">application type mismatch
+  Monster.mk true
+argument
+  true
+has type
+  Bool : Type
+but is expected to have type
+  MythicalCreature : Type</code></span></span><span class="const token" data-binding="const-Bool.true" data-verso-hover="97">true</span></span><span class="unknown token" data-binding="const-Monster.mk" data-verso-hover="1017">,</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1016">"sunlight"</span><span class="unknown token" data-binding="const-Monster.mk" data-verso-hover="1017">⟩</span></code><div class="error">
+              <pre>application type mismatch
+  Monster.mk true
+argument
+  true
+has type
+  Bool : Type
+but is expected to have type
+  MythicalCreature : Type</pre></div>
+            <p>
+              An extra set of angle brackets is required, which invokes <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature.mk" data-verso-hover="1011">MythicalCreature.mk</span></code> on <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Bool.true" data-verso-hover="97">true</span></code>:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-2135">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-Foo.troll" data-verso-hover="1014">troll</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="unknown token" data-binding="const-Monster.mk" data-verso-hover="1017">⟨</span><span class="unknown token" data-binding="const-MythicalCreature.mk" data-verso-hover="1011">⟨</span><span class="const token" data-binding="const-Bool.true" data-verso-hover="97">true</span><span class="unknown token" data-binding="const-MythicalCreature.mk" data-verso-hover="1011">⟩</span><span class="unknown token" data-binding="const-Monster.mk" data-verso-hover="1017">,</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1016">"sunlight"</span><span class="unknown token" data-binding="const-Monster.mk" data-verso-hover="1017">⟩</span></code><p>
+              Lean's dot notation is capable of taking inheritance into account.
+In other words, the existing <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1010">MythicalCreature.large</span></code> can be used with a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span></code>, and Lean automatically inserts the call to <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monster.toMythicalCreature" data-verso-hover="1018">Monster.toMythicalCreature</span></code> before the call to <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1010">MythicalCreature.large</span></code>.
+However, this only occurs when using dot notation, and applying the field lookup function using normal function call syntax results in a type error:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.eval-2430" data-verso-hover="7">#eval</span><span class="inter-text"> </span><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1010">MythicalCreature.large</span><span class="inter-text"> </span><span class="has-info error"><span class="hover-container"><span class="hover-info messages"><code class="message error">application type mismatch
+  MythicalCreature.large troll
+argument
+  troll
+has type
+  Monster : Type
+but is expected to have type
+  MythicalCreature : Type</code></span></span><span class="const token" data-binding="const-troll" data-verso-hover="1014">troll</span></span></code><div class="error">
+              <pre>application type mismatch
+  MythicalCreature.large troll
+argument
+  troll
+has type
+  Monster : Type
+but is expected to have type
+  MythicalCreature : Type</pre></div>
+            <p>
+              Dot notation can also take inheritance into account for user-defined functions.
+A small creature is one that is not large:</p>
+            <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-4771">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-MythicalCreature.small" data-verso-hover="1019">MythicalCreature.small</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.7121" data-verso-hover="1020">c</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Bool" data-verso-hover="40">Bool</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="unknown token" data-binding="">!</span><span class="var token" data-binding="var-_uniq.7121" data-verso-hover="1020">c</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1010">large</span></code><p>
+              Evaluating <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-troll" data-verso-hover="1014">troll</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-MythicalCreature.small" data-verso-hover="1019">small</span></code> yields <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Bool.false" data-verso-hover="19">false</span></code>, while attempting to evaluate <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature.small" data-verso-hover="1019">MythicalCreature.small</span><span class="inter-text"> </span><span class="const token" data-binding="const-troll" data-verso-hover="1014">troll</span></code> results in:</p>
+            <div class="error">
+              <pre>application type mismatch
+  MythicalCreature.small troll
+argument
+  troll
+has type
+  Monster : Type
+but is expected to have type
+  MythicalCreature : Type</pre></div>
+            <section>
+              <h2 id="Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Structures-and-Inheritance--Multiple-Inheritance">
+                5.1.1. Multiple Inheritance</h2>
+              <p>
+                A helper is a mythical creature that can provide assistance when given the correct payment:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.structureTk-1140">structure</span><span class="inter-text"> </span><span class="const token" data-binding="const-Helper" data-verso-hover="1021">Helper</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.extends-1157">extends</span><span class="inter-text"> </span><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-1182">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Helper.assistance" data-verso-hover="1022">assistance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Helper.payment" data-verso-hover="1023">payment</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-String" data-verso-hover="35">String</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-null-1229">deriving</span><span class="inter-text"> </span><span class="const token" data-binding="const-Repr" data-verso-hover="64">Repr</span></code><p>
+                For example, a <em>nisse</em> is a kind of small elf that's known to help around the house when provided with tasty porridge:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-2665">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-nisse" data-verso-hover="1024">nisse</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Helper" data-verso-hover="1021">Helper</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-2684">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1015">large</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Bool.false" data-verso-hover="19">false</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Helper.assistance" data-verso-hover="465">assistance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1025">"household tasks"</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Helper.payment" data-verso-hover="465">payment</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1026">"porridge"</span></code><p>
+                If domesticated, trolls make excellent helpers.
+They are strong enough to plow a whole field in a single night, though they require model goats to keep them satisfied with their lot in life.
+A monstrous assistant is a monster that is also a helper:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.structureTk-2816">structure</span><span class="inter-text"> </span><span class="const token" data-binding="const-MonstrousAssistant" data-verso-hover="1027">MonstrousAssistant</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.extends-2845">extends</span><span class="inter-text"> </span><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="const token" data-binding="const-Helper" data-verso-hover="1021">Helper</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-2869">where</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-null-2875">deriving</span><span class="inter-text"> </span><span class="const token" data-binding="const-Repr" data-verso-hover="64">Repr</span></code><p>
+                A value of this structure type must fill in all of the fields from both parent structures:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-3931">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-domesticatedTroll" data-verso-hover="1028">domesticatedTroll</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-MonstrousAssistant" data-verso-hover="1027">MonstrousAssistant</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-3974">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1015">large</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Bool.true" data-verso-hover="97">true</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-MonstrousAssistant.assistance" data-verso-hover="465">assistance</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1029">"heavy labor"</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-MonstrousAssistant.payment" data-verso-hover="465">payment</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1030">"toy goats"</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-Monster.vulnerability" data-verso-hover="465">vulnerability</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1016">"sunlight"</span></code><p>
+                Both of the parent structure types extend <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span></code>.
+If multiple inheritance were implemented naïvely, then this could lead to a “diamond problem”, where it would be unclear which path to <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1010">large</span></code> should be taken from a given <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MonstrousAssistant" data-verso-hover="1027">MonstrousAssistant</span></code>.
+Should it take <code>large</code> from the contained <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span></code> or from the contained <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Helper" data-verso-hover="1021">Helper</span></code>?
+In Lean, the answer is that the first specified path to the grandparent structure is taken, and the additional parent structures' fields are copied rather than having the new structure include both parents directly.</p>
+              <p>
+                This can be seen by examining the signature of the constructor for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MonstrousAssistant" data-verso-hover="1027">MonstrousAssistant</span></code>:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">MonstrousAssistant.mk (toMonster : Monster) (assistance payment : String) : MonstrousAssistant</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.check-3257">#check</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-MonstrousAssistant.mk" data-verso-hover="1031">MonstrousAssistant.mk</span></code><div class="information">
+                <pre>MonstrousAssistant.mk (toMonster : Monster) (assistance payment : String) : MonstrousAssistant</pre></div>
+              <p>
+                It takes a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span></code> as an argument, along with the two fields that <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Helper" data-verso-hover="1021">Helper</span></code> introduces on top of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span></code>.
+Similarly, while <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MonstrousAssistant.toMonster" data-verso-hover="1032">MonstrousAssistant.toMonster</span></code> merely extracts the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Monster" data-verso-hover="1012">Monster</span></code> from the constructor, <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MonstrousAssistant.toHelper" data-verso-hover="1033">MonstrousAssistant.toHelper</span></code> has no <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Helper" data-verso-hover="1021">Helper</span></code> to extract.
+The <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">#print</span></code> command exposes its implementation:</p>
+              <code class="hl lean block" data-lean-context="examples"><span class="has-info info"><span class="hover-container"><span class="hover-info messages"><code class="message info">@[reducible] def MonstrousAssistant.toHelper : MonstrousAssistant → Helper :=
+fun self =&gt; { toMythicalCreature := self.toMythicalCreature, assistance := self.assistance, payment := self.payment }</code></span></span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.print-3819">#print</span></span><span class="inter-text"> </span><span class="const token" data-binding="const-MonstrousAssistant.toHelper" data-verso-hover="1033">MonstrousAssistant.toHelper</span></code><div class="information">
+                <pre>@[reducible] def MonstrousAssistant.toHelper : MonstrousAssistant → Helper :=
+fun self =&gt; { toMythicalCreature := self.toMythicalCreature, assistance := self.assistance, payment := self.payment }</pre></div>
+              <p>
+                This function constructs a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Helper" data-verso-hover="1021">Helper</span></code> from the fields of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MonstrousAssistant" data-verso-hover="1027">MonstrousAssistant</span></code>.
+The <code>@[reducible]</code> attribute has the same effect as writing <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">abbrev</span></code>.</p>
+              <section>
+                <h3 id="Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Structures-and-Inheritance--Multiple-Inheritance--Default-Declarations">
+                  5.1.1.1. Default Declarations</h3>
+                <p>
+                  When one structure inherits from another, default field definitions can be used to instantiate the parent structure's fields based on the child structure's fields.
+If more size specificity is required than whether a creature is large or not, a dedicated datatype describing sizes can be used together with inheritance, yielding a structure in which the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1010">large</span></code> field is computed from the contents of the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SizedCreature.size" data-verso-hover="1034">size</span></code> field:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.inductive-4140" data-verso-hover="96">inductive</span><span class="inter-text"> </span><span class="const token" data-binding="const-Size" data-verso-hover="1035">Size</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-4155">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Size.small" data-verso-hover="1036">small</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Size.medium" data-verso-hover="1037">medium</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">|</span><span class="inter-text"> </span><span class="const token" data-binding="const-Size.large" data-verso-hover="1038">large</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-null-4192">deriving</span><span class="inter-text"> </span><span class="const token" data-binding="const-BEq" data-verso-hover="516">BEq</span><span class="inter-text">
+</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.structureTk-4206">structure</span><span class="inter-text"> </span><span class="const token" data-binding="const-SizedCreature" data-verso-hover="1039">SizedCreature</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.extends-4230">extends</span><span class="inter-text"> </span><span class="const token" data-binding="const-MythicalCreature" data-verso-hover="1009">MythicalCreature</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-4255">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-SizedCreature.size" data-verso-hover="1034">size</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Size" data-verso-hover="1035">Size</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="unknown token" data-binding="">large</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.6726" data-verso-hover="1040">size</span><span class="inter-text"> </span><span class="unknown token" data-binding="">==</span><span class="inter-text"> </span><span class="const token" data-binding="const-Size.large" data-verso-hover="1038">Size.large</span></code><p>
+                  This default definition is only a default definition, however.
+Unlike property inheritance in a language like C# or Scala, the definitions in the child structure are only used when no specific value for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1010">large</span></code> is provided, and nonsensical results can occur:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-4363">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-nonsenseCreature" data-verso-hover="1041">nonsenseCreature</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-SizedCreature" data-verso-hover="1039">SizedCreature</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-4400">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1015">large</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Bool.false" data-verso-hover="19">false</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-SizedCreature.size" data-verso-hover="1042">size</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Size.large" data-verso-hover="1038">.large</span></code><p>
+                  If the child structure should not deviate from the parent structure, there are a few options:</p>
+                <ol start="1">
+                  <li>
+                    <p>
+                      Documenting the relationship, as is done for <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-BEq" data-verso-hover="516">BEq</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Hashable" data-verso-hover="542">Hashable</span></code></p>
+                    </li>
+                  <li>
+                    <p>
+                      Defining a proposition that the fields are related appropriately, and designing the API to require evidence that the proposition is true where it matters</p>
+                    </li>
+                  <li>
+                    <p>
+                      Not using inheritance at all</p>
+                    </li>
+                  </ol>
+                <p>
+                  The second option could look like this:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.abbrev-4496">abbrev</span><span class="inter-text"> </span><span class="const token" data-binding="const-SizesMatch" data-verso-hover="1043">SizesMatch</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.7062" data-verso-hover="1044">sc</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-SizedCreature" data-verso-hover="1039">SizedCreature</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="" data-verso-hover="3">Prop</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="var token" data-binding="var-_uniq.7062" data-verso-hover="1044">sc</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-MythicalCreature.large" data-verso-hover="1010">large</span><span class="inter-text"> </span><span class="unknown token" data-binding="">=</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.7062" data-verso-hover="1044">sc</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-SizedCreature.size" data-verso-hover="1034">size</span><span class="inter-text"> </span><span class="unknown token" data-binding="">==</span><span class="inter-text"> </span><span class="const token" data-binding="const-Size.large" data-verso-hover="1038">Size.large</span><span class="unknown token" data-binding="">)</span></code><p>
+                  Note that a single equality sign is used to indicate the equality <em>proposition</em>, while a double equality sign is used to indicate a function that checks equality and returns a <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Bool" data-verso-hover="40">Bool</span></code>.
+<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SizesMatch" data-verso-hover="1043">SizesMatch</span></code> is defined as an <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">abbrev</span></code> because it should automatically be unfolded in proofs, so that <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="">decide</span></code> can see the equality that should be proven.</p>
+                <p>
+                  A <em>huldre</em> is a medium-sized mythical creature—in fact, they are the same size as humans.
+The two sized fields on <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-huldre" data-verso-hover="1045">huldre</span></code> match one another:</p>
+                <code class="hl lean block" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.definition-4632">def</span><span class="inter-text"> </span><span class="const token" data-binding="const-huldre" data-verso-hover="1045">huldre</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-SizedCreature" data-verso-hover="1039">SizedCreature</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.whereStructInst-4659">where</span><span class="inter-text">
+</span><span class="inter-text">  </span><span class="const token" data-binding="const-SizedCreature.size" data-verso-hover="1042">size</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="const token" data-binding="const-Size.medium" data-verso-hover="1037">.medium</span><span class="inter-text">
+</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.example-4684">example</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-SizesMatch" data-verso-hover="1043">SizesMatch</span><span class="inter-text"> </span><span class="const token" data-binding="const-huldre" data-verso-hover="1045">huldre</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-17175725180484109473-4715-4717"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-4715" data-verso-hover="340">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-17175725180484109473-4715-4717"><span class="tactic-state"><span class="goal"><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="const token" data-binding="const-SizesMatch" data-verso-hover="1043">SizesMatch</span><span class="inter-text"> </span><span class="const token" data-binding="const-huldre" data-verso-hover="1045">huldre</span></span></span></span></span></span><span class="tactic"><label for="tactic-state-7-4720-4726"><span class="inter-text">
+  </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.decide-4720" data-verso-hover="343">decide</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-4720-4726"><span class="tactic-state">All goals completed! 🐙</span></span></code></section>
+              <section>
+                <h3 id="Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Structures-and-Inheritance--Multiple-Inheritance--Type-Class-Inheritance">
+                  5.1.1.2. Type Class Inheritance</h3>
+                <p>
+                  Behind the scenes, type classes are structures.
+Defining a new type class defines a new structure, and defining an instance creates a value of that structure type.
+They are then added to internal tables in Lean that allow it to find the instances upon request.
+A consequence of this is that type classes may inherit from other type classes.</p>
+                <p>
+                  Because it uses precisely the same language features, type class inheritance supports all the features of structure inheritance, including multiple inheritance, default implementations of parent types' methods, and automatic collapsing of diamonds.
+This is useful in many of the same situations that multiple interface inheritance is useful in languages like Java, C# and Kotlin.
+By carefully designing type class inheritance hierarchies, programmers can get the best of both worlds: a fine-grained collection of independently-implementable abstractions, and automatic construction of these specific abstractions from larger, more general abstractions.
+</p>
+                </section>
+              </section>
+            </section>
+          <nav class="prev-next-buttons">
+            <a class="local-button active" href="Functors___-Applicative-Functors___-and-Monads/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads" rel="prev" title="5. Functors, Applicative Functors, and Monads"><span class="arrow">←</span><span class="where">5. Functors, Applicative Functors, and Monads</span></a><a class="local-button active" href="Functors___-Applicative-Functors___-and-Monads/Applicative-Functors/#Functional-Programming-in-Lean--Functors___-Applicative-Functors___-and-Monads--Applicative-Functors" rel="next" title="5.2. Applicative Functors"><span class="where">5.2. Applicative Functors</span><span class="arrow">→</span></a></nav>
+          </div>
+        </main></div>
+    </body>
+  </html>
+
